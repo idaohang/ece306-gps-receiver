@@ -1,0 +1,159 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       27/Mar/2014  18:05:18 #
+# Copyright 1996-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    __rt_version  =  3                                                       #
+#    __double_size =  32                                                      #
+#    __reg_r4      =  free                                                    #
+#    __reg_r5      =  free                                                    #
+#    __pic         =  no                                                      #
+#    __core        =  430X                                                    #
+#    __data_model  =  small                                                   #
+#    Source file   =  K:\ece306\Homework\hw_8\serial_io.c                     #
+#    Command line  =  K:\ece306\Homework\hw_8\serial_io.c -lC                 #
+#                     K:\ece306\Homework\hw_8\Debug\List\ -o                  #
+#                     K:\ece306\Homework\hw_8\Debug\Obj\ --no_cse             #
+#                     --no_unroll --no_inline --no_code_motion --no_tbaa      #
+#                     --debug -D__MSP430FR5739__ -e --double=32               #
+#                     --dlib_config "C:\Program Files (x86)\IAR               #
+#                     Systems\Embedded Workbench                              #
+#                     6.5\430\LIB\DLIB\dl430xsfn.h" --core=430X               #
+#                     --data_model=small -Ol --multiplier=32                  #
+#                     --multiplier_location=4C0 --hw_workaround=CPU40         #
+#    List file     =  K:\ece306\Homework\hw_8\Debug\List\serial_io.lst        #
+#    Object file   =  K:\ece306\Homework\hw_8\Debug\Obj\serial_io.r43         #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+K:\ece306\Homework\hw_8\serial_io.c
+      1          #include "functions.h"
+      2          #include "macros.h"
+      3          #include "msp430.h"
+
+   \                                 In  segment DATA16_AN, at 0x5ec
+   \   union <unnamed> _A_UCA1RXBUF_L
+   \                     _A_UCA1RXBUF_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x5ee
+   \   union <unnamed> _A_UCA1TXBUF_L
+   \                     _A_UCA1TXBUF_L:
+   \   000000                DS8 2
+      4          
+
+   \                                 In  segment CODE, align 2
+      5          void TxByte(char c)
+   \                     TxByte:
+      6          {
+      7          	UCA1TXBUF = c;	
+   \   000000   4C4C         MOV.B   R12, R12
+   \   000002   824CEE05     MOV.W   R12, &0x5ee
+      8                  waitMsec(10);
+   \   000006   3C400A00     MOV.W   #0xa, R12
+   \   00000A   ........     BRA     #waitMsec
+   \   00000E                REQUIRE _A_UCA1TXBUF_L
+      9          }
+     10          
+
+   \                                 In  segment CODE, align 2
+     11          void RxByte(char* c)
+   \                     RxByte:
+     12          {
+     13          	*c = UCA1RXBUF;
+   \   000000   1E42EC05     MOV.W   &0x5ec, R14
+   \   000004   CC4E0000     MOV.B   R14, 0(R12)
+     14          }
+   \   000008   1001         RETA
+   \   00000A                REQUIRE _A_UCA1RXBUF_L
+     15          
+
+   \                                 In  segment CODE, align 2
+     16          void TxArray(char* array, int length)
+   \                     TxArray:
+     17          {
+   \   000000   3B15         PUSHM.W #0x4, R11
+   \   000002   0A4C         MOV.W   R12, R10
+   \   000004   0B4D         MOV.W   R13, R11
+     18          	for(int i=0; i < length; i++)
+   \   000006   0843         MOV.W   #0x0, R8
+   \   000008   063C         JMP     ??TxArray_1
+     19          		TxByte(array[i]);
+   \                     ??TxArray_0:
+   \   00000A   0F4A         MOV.W   R10, R15
+   \   00000C   0F58         ADD.W   R8, R15
+   \   00000E   6C4F         MOV.B   @R15, R12
+   \   000010   ........     CALLA   #TxByte
+   \   000014   1853         ADD.W   #0x1, R8
+   \                     ??TxArray_1:
+   \   000016   089B         CMP.W   R11, R8
+   \   000018   F83B         JL      ??TxArray_0
+     20          }
+   \   00001A   3817         POPM.W  #0x4, R11
+   \   00001C   1001         RETA
+     21          
+
+   \                                 In  segment CODE, align 2
+     22          void RxArray(char* array, int* i, int length)
+   \                     RxArray:
+     23          {
+   \   000000   1B15         PUSHM.W #0x2, R11
+   \   000002   0A4C         MOV.W   R12, R10
+   \   000004   0B4D         MOV.W   R13, R11
+     24          	if(*i < 0)
+   \   000006   8B930000     CMP.W   #0x0, 0(R11)
+   \   00000A   0534         JGE     ??RxArray_0
+     25          		*i = -*i;
+   \   00000C   2F4B         MOV.W   @R11, R15
+   \   00000E   3FE3         XOR.W   #0xffff, R15
+   \   000010   1F53         ADD.W   #0x1, R15
+   \   000012   8B4F0000     MOV.W   R15, 0(R11)
+     26          	*i %= length;
+   \                     ??RxArray_0:
+   \   000016   2C4B         MOV.W   @R11, R12
+   \   000018   ........     CALLA   #?DivMod16s
+   \   00001C   8B4E0000     MOV.W   R14, 0(R11)
+     27          	RxByte(array+*i);
+   \   000020   2A5B         ADD.W   @R11, R10
+   \   000022   0C4A         MOV.W   R10, R12
+   \   000024   ........     CALLA   #RxByte
+     28                  *i++;
+   \   000028   2B53         ADD.W   #0x2, R11
+     29          }
+   \   00002A   1A17         POPM.W  #0x2, R11
+   \   00002C   1001         RETA
+
+   Maximum stack usage in bytes:
+
+   CSTACK Function
+   ------ --------
+      8   RxArray
+        8   -> RxByte
+      4   RxByte
+     12   TxArray
+       12   -> TxByte
+      4   TxByte
+        4   -> waitMsec
+
+
+   Segment part sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      46  RxArray
+      10  RxByte
+      30  TxArray
+      14  TxByte
+       2  _A_UCA1RXBUF_L
+       2  _A_UCA1TXBUF_L
+
+ 
+ 100 bytes in segment CODE
+   4 bytes in segment DATA16_AN
+ 
+ 100 bytes of CODE memory
+   0 bytes of DATA memory (+ 4 bytes shared)
+
+Errors: none
+Warnings: none

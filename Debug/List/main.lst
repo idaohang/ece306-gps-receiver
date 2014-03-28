@@ -1,0 +1,709 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       27/Mar/2014  17:28:53 #
+# Copyright 1996-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    __rt_version  =  3                                                       #
+#    __double_size =  32                                                      #
+#    __reg_r4      =  free                                                    #
+#    __reg_r5      =  free                                                    #
+#    __pic         =  no                                                      #
+#    __core        =  430X                                                    #
+#    __data_model  =  small                                                   #
+#    Source file   =  K:\ece306\Homework\hw_8\main.c                          #
+#    Command line  =  K:\ece306\Homework\hw_8\main.c -lC                      #
+#                     K:\ece306\Homework\hw_8\Debug\List\ -o                  #
+#                     K:\ece306\Homework\hw_8\Debug\Obj\ --no_cse             #
+#                     --no_unroll --no_inline --no_code_motion --no_tbaa      #
+#                     --debug -D__MSP430FR5739__ -e --double=32               #
+#                     --dlib_config "C:\Program Files (x86)\IAR               #
+#                     Systems\Embedded Workbench                              #
+#                     6.5\430\LIB\DLIB\dl430xsfn.h" --core=430X               #
+#                     --data_model=small -Ol --multiplier=32                  #
+#                     --multiplier_location=4C0 --hw_workaround=CPU40         #
+#    List file     =  K:\ece306\Homework\hw_8\Debug\List\main.lst             #
+#    Object file   =  K:\ece306\Homework\hw_8\Debug\Obj\main.r43              #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+K:\ece306\Homework\hw_8\main.c
+      1          /******************************************************************************
+      2          Main
+      3          
+      4          DESC: This file contains the Main Routine - "While" Operating System
+      5          
+      6          GLOBALS: Last_SW1_State and Last_SW2_State are defined;
+      7          display_1 and display_2 are changed
+      8          
+      9          Nathan Hansen, Feb 2014, Built with IAR Embedded Workbench Version: 5.60.5
+     10          ******************************************************************************/
+     11          
+     12          
+     13          //Include Statements
+     14          #include  "msp430.h"
+
+   \                                 In  segment DATA16_AN, at 0x700
+   \   union <unnamed> _A_ADC10CTL0_L
+   \                     _A_ADC10CTL0_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x702
+   \   union <unnamed> _A_ADC10CTL1_L
+   \                     _A_ADC10CTL1_L:
+   \   000000                DS8 2
+     15          #include  "functions.h"
+     16          #include  "macros.h"
+     17          
+     18          
+     19          // Shared Globals
+     20          //char *display_1; now specified in functions.h and defined in LCD
+     21          //char *display_2; now specified in functions.h and defined in LCD
+     22          
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     23          volatile char Last_SW1_State = NOT_PRESSED;
+   \                     Last_SW1_State:
+   \   000000                DS8 1
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     24          volatile char Last_SW2_State = NOT_PRESSED;
+   \                     Last_SW2_State:
+   \   000000                DS8 1
+     25          
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     26          volatile int ADC_Thumb = 0;
+   \                     ADC_Thumb:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     27          volatile int ADC_LeftIR = 0; 
+   \                     ADC_LeftIR:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     28          volatile int ADC_RightIR = 0;
+   \                     ADC_RightIR:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_I, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_copy
+     29          char IsLight = 1;
+   \                     IsLight:
+   \   000000                DS8 1
+   \   000001                REQUIRE `?<Initializer for IsLight>`
+
+   \                                 In  segment DATA16_I, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_copy
+     30          char WasLight = 1;
+   \                     WasLight:
+   \   000000                DS8 1
+   \   000001                REQUIRE `?<Initializer for WasLight>`
+     31          
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     32          int AdcChannel = ADC10INCH_0;
+   \                     AdcChannel:
+   \   000000                DS8 2
+     33          
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     34          volatile int MotorTimer = 0;
+   \                     MotorTimer:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_I, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_copy
+     35          volatile int LeftMotorPower = LPOWER;
+   \                     LeftMotorPower:
+   \   000000                DS8 2
+   \   000002                REQUIRE `?<Initializer for LeftMotorPower>`
+
+   \                                 In  segment DATA16_I, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_copy
+     36          volatile int RightMotorPower = RPOWER;
+   \                     RightMotorPower:
+   \   000000                DS8 2
+   \   000002                REQUIRE `?<Initializer for RightMotorPower>`
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     37          volatile int ProgramState = 0;
+   \                     ProgramState:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_I, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_copy
+     38          volatile int OldState = -1;
+   \                     OldState:
+   \   000000                DS8 2
+   \   000002                REQUIRE `?<Initializer for OldState>`
+     39          
+     40          //                  "0123456789abcde\0"
+
+   \                                 In  segment DATA16_I, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_copy
+     41          char TxChars[16] = {"    NCSU #1    \0"};
+   \                     TxChars:
+   \   000000                DS8 16
+   \   000010                REQUIRE `?<Initializer for TxChars>`
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     42          int TxIndex = 0;
+   \                     TxIndex:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_I, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_copy
+     43          char RxChars[16] = {"    NO DATA    \0"};
+   \                     RxChars:
+   \   000000                DS8 16
+   \   000010                REQUIRE `?<Initializer for RxChars>`
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     44          int RxIndex = 0;
+   \                     RxIndex:
+   \   000000                DS8 2
+     45          
+     46          // Global Variables
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     47          volatile unsigned char control_state[CNTL_STATE_INDEX];
+   \                     control_state:
+   \   000000                DS8 3
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     48          volatile unsigned int TimeMsec, Time_Sequence = RESET_TIME;
+   \                     TimeMsec:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+   \                     Time_Sequence:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     49          char led_smclk;
+   \                     led_smclk:
+   \   000000                DS8 1
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+     50          volatile char one_time;
+   \                     one_time:
+   \   000000                DS8 1
+     51          
+     52          
+     53          
+     54          //******************************************************************************
+     55          // Main Program
+     56          // This is the main routine for the program. Execution of code starts here.
+     57          // The operating system is Back Ground Fore Ground.
+     58          //******************************************************************************
+     59          
+
+   \                                 In  segment CODE, align 2
+     60          void main(void)
+   \                     main:
+     61          {
+     62          	Init_Ports();                             // Initialize Ports
+   \   000000   ........     CALLA   #Init_Ports
+     63          	Init_Clocks();                            // Initialize Clock System 
+   \   000004   ........     CALLA   #Init_Clocks
+     64          	Init_Conditions();
+   \   000008   ........     CALLA   #Init_Conditions
+     65          	Init_Interrupts();
+   \   00000C   ........     CALLA   #Init_Interrupts
+     66                 
+     67          	//PJOUT |= LED1;                          // Turn LED 1 on to indicate boot
+     68          	  
+     69          	TimeMsec = RESET_TIME;
+   \   000010   8243....     MOV.W   #0x0, &TimeMsec
+     70          	Init_Timers(); 				// Initialize Timers
+   \   000014   ........     CALLA   #Init_Timers
+     71          	Init_LCD();				// Initialize LCD
+   \   000018   ........     CALLA   #Init_LCD
+     72          	//Init_LEDs();                            // Initialize LEDs       
+     73                  
+     74                  
+     75                  
+     76          	//          "0123456789abcdef"
+     77          	display_1 = "   Homework 8   ";
+   \   00001C   B240........ MOV.W   #`?<Constant "   Homework 8   ">`, &display_1
+     78          	display_2 = "                ";
+   \   000022   B240........ MOV.W   #`?<Constant "                ">`, &display_2
+     79          	Display_Process();
+   \   000028   ........     CALLA   #Display_Process
+   \   00002C   113C         JMP     ??main_3
+     80          	
+     81          	//P1OUT |= IR_LED;
+     82                  //waitMsec(10);
+     83          	
+     84          /* ---------- Begining of the "While" Operating System ------------- */
+     85          	while(ALWAYS) 										// Can the Operating system run
+     86          	{                            
+     87          		if(TimeMsec % EVERY_50 == RESET_TIME)
+     88          		{
+     89          			for(int i = 0; i < sizeof RxChars; i++)
+     90          				display_2[i] = RxChars[i];
+   \                     ??main_0:
+   \   00002E   1E42....     MOV.W   &display_2, R14
+   \   000032   0E5F         ADD.W   R15, R14
+   \   000034   DE4F....0000 MOV.B   RxChars(R15), 0(R14)
+   \   00003A   1F53         ADD.W   #0x1, R15
+   \                     ??main_2:
+   \   00003C   3F901000     CMP.W   #0x10, R15
+   \   000040   F62B         JNC     ??main_0
+     91          		
+     92          			Display_Process();					//Refreshes screen every 50 'ticks'
+   \   000042   ........     CALLA   #Display_Process
+     93          		}
+     94                          
+     95          		if(TimeMsec % EVERY_2 == RESET_TIME)
+   \                     ??main_1:
+   \   000046   92B3....     BIT.W   #0x1, &TimeMsec
+   \   00004A   022C         JC      ??main_3
+     96          			Switches_Process();                 // Poll for switch state change every other 'tick'
+   \   00004C   ........     CALLA   #Switches_Process
+   \                     ??main_3:
+   \   000050   1C42....     MOV.W   &TimeMsec, R12
+   \   000054   3E403200     MOV.W   #0x32, R14
+   \   000058   ........     CALLA   #?DivMod16u
+   \   00005C   0E93         CMP.W   #0x0, R14
+   \   00005E   F323         JNE     ??main_1
+   \   000060   0F43         MOV.W   #0x0, R15
+   \   000062   EC3F         JMP     ??main_2
+   \   000064   0343         NOP
+     97          	}
+     98          }
+     99          
+
+   \                                 In  segment CODE, align 2
+    100          void Control_Process(void)
+   \                     Control_Process:
+    101          {
+    102          	IsLight = (ADC_LeftIR + ADC_RightIR)/2 < ADC_Thumb;
+                 	^
+Warning[Pa082]: undefined behavior: the order of volatile accesses is
+          undefined in this statement
+   \   000000   1C42....     MOV.W   &ADC_LeftIR, R12
+   \   000004   1C52....     ADD.W   &ADC_RightIR, R12
+   \   000008   2E43         MOV.W   #0x2, R14
+   \   00000A   ........     CALLA   #?DivMod16s
+   \   00000E   1C92....     CMP.W   &ADC_Thumb, R12
+   \   000012   0234         JGE     ??Control_Process_0
+   \   000014   5E43         MOV.B   #0x1, R14
+   \   000016   013C         JMP     ??Control_Process_1
+   \                     ??Control_Process_0:
+   \   000018   4E43         MOV.B   #0x0, R14
+   \                     ??Control_Process_1:
+   \   00001A   C24E....     MOV.B   R14, &IsLight
+    103                  
+    104                  if(!IsLight)
+   \   00001E   C293....     CMP.B   #0x0, &IsLight
+   \   000022   1020         JNE     ??Control_Process_2
+    105          	{
+    106          		//          "0123456789abcdef"
+    107          		display_2 = "       Dark     ";
+   \   000024   B240........ MOV.W   #`?<Constant "       Dark     ">`, &display_2
+    108                          
+    109                          if(WasLight && (ProgramState == 1 || ProgramState == 3))
+   \   00002A   C293....     CMP.B   #0x0, &WasLight
+   \   00002E   0D24         JEQ     ??Control_Process_3
+   \   000030   9293....     CMP.W   #0x1, &ProgramState
+   \   000034   0424         JEQ     ??Control_Process_4
+   \   000036   B2900300.... CMP.W   #0x3, &ProgramState
+   \   00003C   0620         JNE     ??Control_Process_3
+    110                            ProgramState++;
+   \                     ??Control_Process_4:
+   \   00003E   9253....     ADD.W   #0x1, &ProgramState
+   \   000042   033C         JMP     ??Control_Process_3
+    111          	}
+    112          	else
+    113                  {
+    114          		display_2 = "       Light    ";
+   \                     ??Control_Process_2:
+   \   000044   B240........ MOV.W   #`?<Constant "       Light    ">`, &display_2
+    115                  }
+    116                  
+    117                  if((ProgramState != 1 && ProgramState != 3) && MotorTimer <= 0)
+   \                     ??Control_Process_3:
+   \   00004A   9293....     CMP.W   #0x1, &ProgramState
+   \   00004E   0924         JEQ     ??Control_Process_5
+   \   000050   B2900300.... CMP.W   #0x3, &ProgramState
+   \   000056   0524         JEQ     ??Control_Process_5
+   \   000058   9293....     CMP.W   #0x1, &MotorTimer
+   \   00005C   0234         JGE     ??Control_Process_5
+    118                    ProgramState++;
+   \   00005E   9253....     ADD.W   #0x1, &ProgramState
+    119                  
+    120                  if(OldState != ProgramState)
+                         ^
+Warning[Pa082]: undefined behavior: the order of volatile accesses is
+          undefined in this statement
+   \                     ??Control_Process_5:
+   \   000062   9292........ CMP.W   &ProgramState, &OldState
+   \   000068   8A24         JEQ     ??Control_Process_6
+    121                    switch(ProgramState)
+   \   00006A   1F42....     MOV.W   &ProgramState, R15
+   \   00006E   1F83         SUB.W   #0x1, R15
+   \   000070   0B24         JEQ     ??Control_Process_7
+   \   000072   1F83         SUB.W   #0x1, R15
+   \   000074   1C24         JEQ     ??Control_Process_8
+   \   000076   1F83         SUB.W   #0x1, R15
+   \   000078   2D24         JEQ     ??Control_Process_9
+   \   00007A   1F83         SUB.W   #0x1, R15
+   \   00007C   3A24         JEQ     ??Control_Process_10
+   \   00007E   1F83         SUB.W   #0x1, R15
+   \   000080   5124         JEQ     ??Control_Process_11
+   \   000082   1F83         SUB.W   #0x1, R15
+   \   000084   6224         JEQ     ??Control_Process_12
+   \   000086   743C         JMP     ??Control_Process_13
+    122                    {
+    123                      case 1: 
+    124                        allStop();
+   \                     ??Control_Process_7:
+   \   000088   ........     CALLA   #allStop
+    125                        waitMsec(500);
+   \   00008C   3C40F401     MOV.W   #0x1f4, R12
+   \   000090   ........     CALLA   #waitMsec
+    126                        MotorTimer = 10000;
+   \   000094   B2401027.... MOV.W   #0x2710, &MotorTimer
+    127                        LeftMotorPower = LPOWER;
+   \   00009A   B2406400.... MOV.W   #0x64, &LeftMotorPower
+    128                        RightMotorPower = RPOWER;
+   \   0000A0   B2405F00.... MOV.W   #0x5f, &RightMotorPower
+    129                        
+    130                        //          "0123456789abcdef"
+    131                        display_1 = "Forward to Line ";
+   \   0000A6   B240........ MOV.W   #`?<Constant "Forward to Line ">`, &display_1
+    132                        break;
+   \   0000AC   683C         JMP     ??Control_Process_6
+    133                      case 2:
+    134                        allStop();
+   \                     ??Control_Process_8:
+   \   0000AE   ........     CALLA   #allStop
+    135                        waitMsec(500);
+   \   0000B2   3C40F401     MOV.W   #0x1f4, R12
+   \   0000B6   ........     CALLA   #waitMsec
+    136                        LeftMotorPower = -LPOWER;
+   \   0000BA   B2409CFF.... MOV.W   #0xff9c, &LeftMotorPower
+    137                        RightMotorPower = -RPOWER;
+   \   0000C0   B240A1FF.... MOV.W   #0xffa1, &RightMotorPower
+    138                        MotorTimer = 1000;
+   \   0000C6   B240E803.... MOV.W   #0x3e8, &MotorTimer
+    139                        
+    140                        //          "0123456789abcdef"
+    141                        display_1 = " Blind Reverse  ";
+   \   0000CC   B240........ MOV.W   #`?<Constant " Blind Reverse  ">`, &display_1
+    142                        break;
+   \   0000D2   553C         JMP     ??Control_Process_6
+    143                      case 3:
+    144                        allStop();
+   \                     ??Control_Process_9:
+   \   0000D4   ........     CALLA   #allStop
+    145                        MotorTimer = 10000;
+   \   0000D8   B2401027.... MOV.W   #0x2710, &MotorTimer
+    146                        LeftMotorPower = -LPOWER;
+   \   0000DE   B2409CFF.... MOV.W   #0xff9c, &LeftMotorPower
+    147                        RightMotorPower = -RPOWER;
+   \   0000E4   B240A1FF.... MOV.W   #0xffa1, &RightMotorPower
+    148                        
+    149                        //          "0123456789abcdef"
+    150                        display_1 = "Reverse to Line ";
+   \   0000EA   B240........ MOV.W   #`?<Constant "Reverse to Line ">`, &display_1
+    151                        break;
+   \   0000F0   463C         JMP     ??Control_Process_6
+    152                      case 4: 
+    153                        allStop();
+   \                     ??Control_Process_10:
+   \   0000F2   ........     CALLA   #allStop
+    154                        //waitMsec(250);
+    155                        MotorTimer = (10000 - MotorTimer + 4000)/2;
+   \   0000F6   3C40B036     MOV.W   #0x36b0, R12
+   \   0000FA   1C82....     SUB.W   &MotorTimer, R12
+   \   0000FE   2E43         MOV.W   #0x2, R14
+   \   000100   ........     CALLA   #?DivMod16s
+   \   000104   824C....     MOV.W   R12, &MotorTimer
+    156                        waitMsec(500);
+   \   000108   3C40F401     MOV.W   #0x1f4, R12
+   \   00010C   ........     CALLA   #waitMsec
+    157                        LeftMotorPower = LPOWER-10;
+   \   000110   B2405A00.... MOV.W   #0x5a, &LeftMotorPower
+    158                        RightMotorPower = RPOWER;
+   \   000116   B2405F00.... MOV.W   #0x5f, &RightMotorPower
+    159                        
+    160                        //          "0123456789abcdef"
+    161                        display_1 = "Forward to Mid  ";
+   \   00011C   B240........ MOV.W   #`?<Constant "Forward to Mid  ">`, &display_1
+    162                        break;
+   \   000122   2D3C         JMP     ??Control_Process_6
+    163                      case 5:
+    164                        allStop();
+   \                     ??Control_Process_11:
+   \   000124   ........     CALLA   #allStop
+    165                        waitMsec(500);
+   \   000128   3C40F401     MOV.W   #0x1f4, R12
+   \   00012C   ........     CALLA   #waitMsec
+    166                        MotorTimer = SPIN_TIME*3;
+   \   000130   B2403A20.... MOV.W   #0x203a, &MotorTimer
+    167                        LeftMotorPower = LPOWER;
+   \   000136   B2406400.... MOV.W   #0x64, &LeftMotorPower
+    168                        RightMotorPower = -RPOWER;
+   \   00013C   B240A1FF.... MOV.W   #0xffa1, &RightMotorPower
+    169                        
+    170                        //          "0123456789abcdef"
+    171                        display_1 = "   Spin CW  3x  ";
+   \   000142   B240........ MOV.W   #`?<Constant "   Spin CW  3x  ">`, &display_1
+    172                        break;
+   \   000148   1A3C         JMP     ??Control_Process_6
+    173                      case 6:
+    174                        allStop();
+   \                     ??Control_Process_12:
+   \   00014A   ........     CALLA   #allStop
+    175                        waitMsec(500);
+   \   00014E   3C40F401     MOV.W   #0x1f4, R12
+   \   000152   ........     CALLA   #waitMsec
+    176                        MotorTimer = SPIN_TIME*2;
+   \   000156   B2407C15.... MOV.W   #0x157c, &MotorTimer
+    177                        LeftMotorPower = -LPOWER;
+   \   00015C   B2409CFF.... MOV.W   #0xff9c, &LeftMotorPower
+    178                        RightMotorPower = RPOWER;
+   \   000162   B2405F00.... MOV.W   #0x5f, &RightMotorPower
+    179                        
+    180                        //          "0123456789abcdef"
+    181                        display_1 = "   Spin CCW  2x ";
+   \   000168   B240........ MOV.W   #`?<Constant "   Spin CCW  2x ">`, &display_1
+    182                        break;
+   \   00016E   073C         JMP     ??Control_Process_6
+    183                      default:
+    184                        allStop();
+   \                     ??Control_Process_13:
+   \   000170   ........     CALLA   #allStop
+    185                        MotorTimer = 0;
+   \   000174   8243....     MOV.W   #0x0, &MotorTimer
+    186                        
+    187                        //          "0123456789abcdef"
+    188                        display_1 = "     Default    ";
+   \   000178   B240........ MOV.W   #`?<Constant "     Default    ">`, &display_1
+    189                        break;
+    190                    }
+    191                  
+    192                  WasLight = IsLight;
+   \                     ??Control_Process_6:
+   \   00017E   D242........ MOV.B   &IsLight, &WasLight
+    193                  OldState = ProgramState;
+   \   000184   9242........ MOV.W   &ProgramState, &OldState
+    194          }
+   \   00018A   1001         RETA
+    195          
+
+   \                                 In  segment CODE, align 2
+    196          void ADC_Process(void)
+   \                     ADC_Process:
+   \                     ??ADC_Process_0:
+    197          {
+    198          	while (ADC10CTL1 & BUSY); // Wait if ADC10 core is active
+   \   000000   92B30207     BIT.W   #0x1, &0x702
+   \   000004   FD2F         JC      ??ADC_Process_0
+    199          	ADC10CTL0 |= ADC10ENC + ADC10SC; // Sampling and conversion start
+   \   000006   B2D003000007 BIS.W   #0x3, &0x700
+    200          }
+   \   00000C   1001         RETA
+   \   00000E                REQUIRE _A_ADC10CTL1_L
+   \   00000E                REQUIRE _A_ADC10CTL0_L
+
+   \                                 In  segment DATA16_ID, align 1, align-sorted
+   \                     `?<Initializer for IsLight>`:
+   \   000000   01           DC8 1
+
+   \                                 In  segment DATA16_ID, align 1, align-sorted
+   \                     `?<Initializer for WasLight>`:
+   \   000000   01           DC8 1
+
+   \                                 In  segment DATA16_ID, align 2, align-sorted
+   \                     `?<Initializer for LeftMotorPower>`:
+   \   000000   6400         DC16 100
+
+   \                                 In  segment DATA16_ID, align 2, align-sorted
+   \                     `?<Initializer for RightMotorPower>`:
+   \   000000   5F00         DC16 95
+
+   \                                 In  segment DATA16_ID, align 2, align-sorted
+   \                     `?<Initializer for OldState>`:
+   \   000000   FFFF         DC16 -1
+
+   \                                 In  segment DATA16_ID, align 1, align-sorted
+   \                     `?<Initializer for TxChars>`:
+   \   000000   202020204E43 DC8 "    NCSU #1    "
+   \            535520233120
+   \            20202000    
+
+   \                                 In  segment DATA16_ID, align 1, align-sorted
+   \                     `?<Initializer for RxChars>`:
+   \   000000   202020204E4F DC8 "    NO DATA    "
+   \            204441544120
+   \            20202000    
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "   Homework 8   ">`:
+   \   000000   202020486F6D DC8 "   Homework 8   "
+   \            65776F726B20
+   \            3820202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "                ">`:
+   \   000000   202020202020 DC8 "                "
+   \            202020202020
+   \            2020202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "       Dark     ">`:
+   \   000000   202020202020 DC8 "       Dark     "
+   \            204461726B20
+   \            2020202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "       Light    ">`:
+   \   000000   202020202020 DC8 "       Light    "
+   \            204C69676874
+   \            2020202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "Forward to Line ">`:
+   \   000000   466F72776172 DC8 "Forward to Line "
+   \            6420746F204C
+   \            696E652000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant " Blind Reverse  ">`:
+   \   000000   20426C696E64 DC8 " Blind Reverse  "
+   \            205265766572
+   \            7365202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "Reverse to Line ">`:
+   \   000000   526576657273 DC8 "Reverse to Line "
+   \            6520746F204C
+   \            696E652000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "Forward to Mid  ">`:
+   \   000000   466F72776172 DC8 "Forward to Mid  "
+   \            6420746F204D
+   \            6964202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "   Spin CW  3x  ">`:
+   \   000000   202020537069 DC8 "   Spin CW  3x  "
+   \            6E2043572020
+   \            3378202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "   Spin CCW  2x ">`:
+   \   000000   202020537069 DC8 "   Spin CCW  2x "
+   \            6E2043435720
+   \            2032782000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "     Default    ">`:
+   \   000000   202020202044 DC8 "     Default    "
+   \            656661756C74
+   \            2020202000  
+
+   Maximum stack usage in bytes:
+
+   CSTACK Function
+   ------ --------
+      4   ADC_Process
+      4   Control_Process
+        4   -> allStop
+        4   -> waitMsec
+      4   main
+        4   -> Display_Process
+        4   -> Init_Clocks
+        4   -> Init_Conditions
+        4   -> Init_Interrupts
+        4   -> Init_LCD
+        4   -> Init_Ports
+        4   -> Init_Timers
+        4   -> Switches_Process
+
+
+   Segment part sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      17  ?<Constant "                ">
+      17  ?<Constant "       Dark     ">
+      17  ?<Constant "       Light    ">
+      17  ?<Constant "     Default    ">
+      17  ?<Constant "   Homework 8   ">
+      17  ?<Constant "   Spin CCW  2x ">
+      17  ?<Constant "   Spin CW  3x  ">
+      17  ?<Constant " Blind Reverse  ">
+      17  ?<Constant "Forward to Line ">
+      17  ?<Constant "Forward to Mid  ">
+      17  ?<Constant "Reverse to Line ">
+       1  ?<Initializer for IsLight>
+       2  ?<Initializer for LeftMotorPower>
+       2  ?<Initializer for OldState>
+       2  ?<Initializer for RightMotorPower>
+      16  ?<Initializer for RxChars>
+      16  ?<Initializer for TxChars>
+       1  ?<Initializer for WasLight>
+       2  ADC_LeftIR
+      14  ADC_Process
+       2  ADC_RightIR
+       2  ADC_Thumb
+       2  AdcChannel
+     396  Control_Process
+       1  IsLight
+       1  Last_SW1_State
+       1  Last_SW2_State
+       2  LeftMotorPower
+       2  MotorTimer
+       2  OldState
+       2  ProgramState
+       2  RightMotorPower
+      16  RxChars
+       2  RxIndex
+       2  TimeMsec
+       2  Time_Sequence
+      16  TxChars
+       2  TxIndex
+       1  WasLight
+       2  _A_ADC10CTL0_L
+       2  _A_ADC10CTL1_L
+       3  control_state
+       1  led_smclk
+     102  main
+       1  one_time
+
+ 
+ 512 bytes in segment CODE
+   4 bytes in segment DATA16_AN
+ 187 bytes in segment DATA16_C
+  40 bytes in segment DATA16_I
+  40 bytes in segment DATA16_ID
+  27 bytes in segment DATA16_Z
+ 
+ 512 bytes of CODE  memory
+ 227 bytes of CONST memory
+  67 bytes of DATA  memory (+ 4 bytes shared)
+
+Errors: none
+Warnings: 2

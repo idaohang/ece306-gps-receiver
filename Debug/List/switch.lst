@@ -1,0 +1,191 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       27/Mar/2014  18:14:01 #
+# Copyright 1996-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    __rt_version  =  3                                                       #
+#    __double_size =  32                                                      #
+#    __reg_r4      =  free                                                    #
+#    __reg_r5      =  free                                                    #
+#    __pic         =  no                                                      #
+#    __core        =  430X                                                    #
+#    __data_model  =  small                                                   #
+#    Source file   =  K:\ece306\Homework\hw_8\switch.c                        #
+#    Command line  =  K:\ece306\Homework\hw_8\switch.c -lC                    #
+#                     K:\ece306\Homework\hw_8\Debug\List\ -o                  #
+#                     K:\ece306\Homework\hw_8\Debug\Obj\ --no_cse             #
+#                     --no_unroll --no_inline --no_code_motion --no_tbaa      #
+#                     --debug -D__MSP430FR5739__ -e --double=32               #
+#                     --dlib_config "C:\Program Files (x86)\IAR               #
+#                     Systems\Embedded Workbench                              #
+#                     6.5\430\LIB\DLIB\dl430xsfn.h" --core=430X               #
+#                     --data_model=small -Ol --multiplier=32                  #
+#                     --multiplier_location=4C0 --hw_workaround=CPU40         #
+#    List file     =  K:\ece306\Homework\hw_8\Debug\List\switch.lst           #
+#    Object file   =  K:\ece306\Homework\hw_8\Debug\Obj\switch.r43            #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+K:\ece306\Homework\hw_8\switch.c
+      1          /******************************************************************************
+      2          Switch Configurations
+      3          
+      4          DESC: Contains methods that poll the switches and act on that information
+      5          
+      6          GLOBALS: display_1 and display_2, current_SW1_state, and current_SW2_state are changed
+      7          None defined.
+      8          
+      9          Nathan Hansen, 7 Feb 2014, Built with IAR Embedded Workbench Version: 5.60.5
+     10          ******************************************************************************/
+     11          
+     12          
+     13          #include  "functions.h"
+     14          #include  "macros.h"
+     15          #include  "msp430.h"
+
+   \                                 In  segment DATA16_AN, at 0x220
+   \   union <unnamed> _A_PBIN_L
+   \                     _A_PBIN_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x5ee
+   \   union <unnamed> _A_UCA1TXBUF_L
+   \                     _A_UCA1TXBUF_L:
+   \   000000                DS8 2
+     16          
+     17          //Switches_Process
+     18          //DESC: Detects switch toggle (press & release) by polling current states
+     19          //and comparing to records of the past state. On switch toggle, motor forward outputs
+     20          //and LCD readout of motor status are toggled on/off accordingly
+     21          //ARGS: None
+     22          //RET: None
+
+   \                                 In  segment CODE, align 2
+     23          void Switches_Process(void)
+   \                     Switches_Process:
+     24          {
+   \   000000   3B15         PUSHM.W #0x4, R11
+     25          	char current_sw1_state = isPressed(SW1);
+   \   000002   1C43         MOV.W   #0x1, R12
+   \   000004   ........     CALLA   #isPressed
+   \   000008   4B4C         MOV.B   R12, R11
+     26          	char current_sw2_state = isPressed(SW2);
+   \   00000A   2C43         MOV.W   #0x2, R12
+   \   00000C   ........     CALLA   #isPressed
+   \   000010   4A4C         MOV.B   R12, R10
+     27          	
+     28          	if ( !Last_SW1_State && current_sw1_state )
+   \   000012   C293....     CMP.B   #0x0, &Last_SW1_State
+   \   000016   1120         JNE     ??Switches_Process_2
+   \   000018   4B93         CMP.B   #0x0, R11
+   \   00001A   0F24         JEQ     ??Switches_Process_2
+     29          	{               
+     30          		for(int i = 0; i < sizeof TxChars; i++)
+   \   00001C   0843         MOV.W   #0x0, R8
+   \   00001E   0A3C         JMP     ??Switches_Process_3
+     31          		{
+     32          			UCA1TXBUF = TxChars[i];
+   \                     ??Switches_Process_0:
+   \   000020   5F48....     MOV.B   TxChars(R8), R15
+   \   000024   4F4F         MOV.B   R15, R15
+   \   000026   824FEE05     MOV.W   R15, &0x5ee
+     33          			waitMsec(10);
+   \   00002A   3C400A00     MOV.W   #0xa, R12
+   \   00002E   ........     CALLA   #waitMsec
+     34                                  //while(!(UCTXIFG & 0x0002));
+     35          		}
+   \   000032   1853         ADD.W   #0x1, R8
+   \                     ??Switches_Process_3:
+   \   000034   38901000     CMP.W   #0x10, R8
+   \   000038   F32B         JNC     ??Switches_Process_0
+     36          	}
+     37          	
+     38          	if ( !Last_SW2_State && current_sw2_state ) 
+   \                     ??Switches_Process_2:
+   \   00003A   C293....     CMP.B   #0x0, &Last_SW2_State
+   \   00003E   0B20         JNE     ??Switches_Process_4
+   \   000040   4A93         CMP.B   #0x0, R10
+   \   000042   0924         JEQ     ??Switches_Process_4
+     39          	{
+     40          		          //"0123456789abcdef"   
+     41          		for(int i = 0; i < 16; i++)
+   \   000044   0F43         MOV.W   #0x0, R15
+   \   000046   043C         JMP     ??Switches_Process_5
+     42                            RxChars[i] = ' ';
+   \                     ??Switches_Process_1:
+   \   000048   FF402000.... MOV.B   #0x20, RxChars(R15)
+   \   00004E   1F53         ADD.W   #0x1, R15
+   \                     ??Switches_Process_5:
+   \   000050   3F901000     CMP.W   #0x10, R15
+   \   000054   F93B         JL      ??Switches_Process_1
+     43          	}
+     44          	
+     45          	Last_SW1_State = current_sw1_state;
+   \                     ??Switches_Process_4:
+   \   000056   C24B....     MOV.B   R11, &Last_SW1_State
+     46          	Last_SW2_State = current_sw2_state;
+   \   00005A   C24A....     MOV.B   R10, &Last_SW2_State
+     47          }
+   \   00005E   3817         POPM.W  #0x4, R11
+   \   000060   1001         RETA
+   \   000062                REQUIRE _A_UCA1TXBUF_L
+     48          
+     49          //isPressed
+     50          //DESC: Used for polling the current pressed/not pressed status of either switch
+     51          //ARGS: Macro or mask that acts to select the corresponding bit for the desires switch
+     52          //RET: 1 if 'isPressed'; 0 if not 'isPressed'
+
+   \                                 In  segment CODE, align 2
+     53          char isPressed(int switchNum)
+   \                     isPressed:
+     54          {
+     55          	if( (switchNum == SW1) || (switchNum == SW2) )
+   \   000000   1C93         CMP.W   #0x1, R12
+   \   000002   0224         JEQ     ??isPressed_2
+   \   000004   2C93         CMP.W   #0x2, R12
+   \   000006   0720         JNE     ??isPressed_3
+     56          		return !(P4IN & switchNum);
+   \                     ??isPressed_2:
+   \   000008   C2BC2102     BIT.B   R12, &0x221
+   \   00000C   0220         JNE     ??isPressed_4
+   \   00000E   5C43         MOV.B   #0x1, R12
+   \   000010   1001         RETA
+   \                     ??isPressed_4:
+   \   000012   4C43         MOV.B   #0x0, R12
+   \   000014   1001         RETA
+     57          	return 0;
+   \                     ??isPressed_3:
+   \   000016   4C43         MOV.B   #0x0, R12
+   \   000018   1001         RETA
+   \   00001A                REQUIRE _A_PBIN_L
+     58          }
+
+   Maximum stack usage in bytes:
+
+   CSTACK Function
+   ------ --------
+     12   Switches_Process
+       12   -> isPressed
+       12   -> waitMsec
+      4   isPressed
+
+
+   Segment part sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      98  Switches_Process
+       2  _A_PBIN_L
+       2  _A_UCA1TXBUF_L
+      26  isPressed
+
+ 
+ 124 bytes in segment CODE
+   4 bytes in segment DATA16_AN
+ 
+ 124 bytes of CODE memory
+   0 bytes of DATA memory (+ 4 bytes shared)
+
+Errors: none
+Warnings: none

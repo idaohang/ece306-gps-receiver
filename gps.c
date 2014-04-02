@@ -2,25 +2,41 @@
 #include "macros.h"
 #include "functions.h"
 
+
 void init_gps(void)
 {
-    PJOUT |= GPS_RESET | GPS_PWR;
-    waitMsec(5000);  
     PJOUT &= ~GPS_RESET;
-    waitMsec(1000);
+
+    waitMsec(GPS_WAIT);
+    PJOUT |= GPS_RESET;
+
+    waitMsec(GPS_WAIT);
+    gps_wakeup();
+
+    PJOUT &= ~GPS_RESET;
+    waitMsec(GPS_WAIT);
     //PJOUT |= GPS_PWRCNTL;
-    
+
 
     while(!(PJIN & GPS_PWRCHK))
     {
-      PJOUT |= GPS_PWRCNTL;
-      waitMsec(500);
-      PJOUT &= ~GPS_PWRCNTL;
-      waitMsec(2000);
+        waitMsec(GPS_WAIT);
+        gps_wakeup();
     }
       //Wait for it to transition to high
     //Once PWRCHK is high, release GPS_PWRCNTL
     //By setting to low.
     //waitMsec(5000);
     //PJOUT &= ~GPS_PWRCNTL;
+}
+
+void gps_wakeup(void){
+    waitMsec(GPS_WAIT);
+    PJOUT |= GPS_PWRCNTL;
+
+    while(!(PJIN & GPS_PWRCHK)){
+        //Wait until GPS_PWRCHK comes on.
+    }
+
+    PJOUT &= ~GPS_PWRCNTL;
 }

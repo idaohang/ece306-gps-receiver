@@ -1,6 +1,8 @@
 //---------------------------------------------
 //Shared Global Variables
 
+void gps_wakeup(void);
+
 extern char *display_1;
 extern char *display_2;
 
@@ -12,7 +14,7 @@ volatile extern unsigned int CommTimer;
 volatile extern unsigned int DebounceTimer;
 
 volatile extern int ADC_Thumb;
-volatile extern int ADC_LeftIR; 
+volatile extern int ADC_LeftIR;
 volatile extern int ADC_RightIR;
 
 extern char UsbRx[128];
@@ -63,7 +65,7 @@ void enable_interrupts(void);
 void Init_Ports(void);
 void Init_Port1(void);
 void Init_Port2(void);
-void Init_Port3(void); 
+void Init_Port3(void);
 void Init_Port4(void);
 void Init_PortJ(void);
 
@@ -72,13 +74,13 @@ void Init_LEDs(void);
 
 // Function prototypes LCD
 
-void Init_LCD(void); 
-void lcd_clear(void); 
-void lcd_putc(char c); 
-void lcd_puts(char *s); 
-void lcd_out(char *s, char line); 
-void lcd_write(char data, char command); 
-void lcd_command( char data); 
+void Init_LCD(void);
+void lcd_clear(void);
+void lcd_putc(char c);
+void lcd_puts(char *s);
+void lcd_out(char *s, char line);
+void lcd_write(char data, char command);
+void lcd_command( char data);
 void Display_Process(void);
 
 //Function Prototypes Interrupt (not the interrupts themselves)

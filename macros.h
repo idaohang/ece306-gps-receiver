@@ -72,7 +72,7 @@
 #define SPI_SIMO (0x40)
 #define RS_LCD (0x80)
 
-// Port 2 Macros 
+// Port 2 Macros
 
 #define USB_TXD (0x01)
 #define USB_RXD (0x02)
@@ -83,7 +83,7 @@
 #define CPU_RXD (0x40)
 #define UNK_3 (0x80)
 
-// Port 3 Macros 
+// Port 3 Macros
 #define ACEL_X (0x01)  //Does capitalization matter here?
 #define ACEL_Y (0x02)
 #define ACEL_Z (0x04)
@@ -93,7 +93,7 @@
 #define L_FORWARD (0x40)
 #define L_REVERSE (0x80)
 
-// Port 4 Macros 
+// Port 4 Macros
 #define SW1 (0x01) //Switch 1
 #define SW2 (0x02) //Switch 2
 
@@ -117,7 +117,7 @@
 
 // SPI
 #define SPI_CS_LCD           (0x10) // Old NTC - ADC Input
-#define RESET_LCD            (0x20) // 
+#define RESET_LCD            (0x20) //
 #define RS_LCD               (0x80) // SPI RS Command / Data selection
 
 // LCD
@@ -216,6 +216,9 @@
 #define WAIT_1 (1)
 #define WAIT_16 (16)
 #define COUNT_1 (1)
+
+//GPS macros
+#define GPS_WAIT (200)
 
 
 //-----------------------------------------------------------------------------

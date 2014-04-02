@@ -1,29 +1,3 @@
-//---------------------------------------------
-//Shared Global Variables
-
-volatile extern char *display_1;
-volatile extern char *display_2;
-volatile extern int ADC_Thumb;
-volatile extern int ADC_LeftIR; 
-volatile extern int ADC_RightIR;
-volatile extern unsigned int TimeMsec;
-volatile extern unsigned int Time_Sequence;
-extern int AdcChannel;
-
-volatile extern int MotorTimer;
-volatile extern int LeftMotorPower;
-volatile extern int RightMotorPower;
-volatile extern int MotorState;
-
-volatile extern char Last_SW1_State;
-volatile extern char Last_SW2_State;
-
-extern char TxChars[16];
-extern int TxIndex;
-extern char RxChars[16];
-extern int RxIndex;
-extern char RxRingSize;
-
 //-------------------------------------------
 // Main Macros
 
@@ -34,10 +8,6 @@ extern char RxRingSize;
 #define LCD_LINE_1           (0x80) // Position Cursor at Character 01 of Line 1
 #define LCD_LINE_2           (0xC0) // Position Cursor at Character 01 of Line 2
 #define GPS_ONOFF            (0x08) //
-#define LED1                 (0x01) // LED 1
-#define LED2                 (0x02) // LED 2
-#define LED3                 (0x04) // LED 3
-#define LED4                 (0x08) // LED 4
 
 #define SW1                  (0x01) // Switch 1
 #define SW2                  (0x02) // Switch 2
@@ -136,6 +106,7 @@ extern char RxRingSize;
 //-----------------------------------------------
 // LCD macros
 
+#define DISPLAY_SIZE (16)
 #define NULL ((void *) 0x0)
 
 // Control States

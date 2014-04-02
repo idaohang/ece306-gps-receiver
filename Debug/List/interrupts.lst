@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       28/Mar/2014  12:19:29 #
+# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       01/Apr/2014  21:03:25 #
 # Copyright 1996-2013 IAR Systems AB.                                         #
 #                                                                             #
 #    __rt_version  =  3                                                       #
@@ -119,29 +119,9 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\interrupts.c
    \                     TA0EX0:
    \   000000                DS8 2
 
-   \                                 In  segment DATA16_AN, at 0x5e0
-   \   union <unnamed> _A_UCA1CTLW0_L
-   \                     _A_UCA1CTLW0_L:
-   \   000000                DS8 2
-
-   \                                 In  segment DATA16_AN, at 0x5e6
-   \   union <unnamed> _A_UCA1BRW_L
-   \                     _A_UCA1BRW_L:
-   \   000000                DS8 2
-
-   \                                 In  segment DATA16_AN, at 0x5e8
-   \   union <unnamed> _A_UCA1MCTLW_L
-   \                     _A_UCA1MCTLW_L:
-   \   000000                DS8 2
-
    \                                 In  segment DATA16_AN, at 0x5ec
    \   union <unnamed> _A_UCA1RXBUF_L
    \                     _A_UCA1RXBUF_L:
-   \   000000                DS8 2
-
-   \                                 In  segment DATA16_AN, at 0x5fa
-   \   union <unnamed> _A_UCA1IE_L
-   \                     _A_UCA1IE_L:
    \   000000                DS8 2
 
    \                                 In  segment DATA16_AN, at 0x5fe
@@ -273,50 +253,30 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\interrupts.c
      75          	{
      76          		USB_Char_Tx[i] = 0x00;// USB Character
      77          	}*/
-     78          	
-     79          	// Configure UART 0
-     80          	UCA1CTLW0 = 0; // Use word register
-   \   0000B0   8243E005     MOV.W   #0x0, &0x5e0
-     81          	UCA1CTLW0 |= UCSSEL__SMCLK; // Set SMCLK as fBRCLK
-   \   0000B4   B2D08000E005 BIS.W   #0x80, &0x5e0
-     82          	UCA1CTLW0 |= UCSWRST; // Set Software reset enable
-   \   0000BA   92D3E005     BIS.W   #0x1, &0x5e0
-     83          	UCA1BRW = 104 ; // 4800 baud	
-   \   0000BE   B2406800E605 MOV.W   #0x68, &0x5e6
-     84          	UCA1MCTLW = 0xD621; // UCA0MCTLW = UCSx | UCFx | UCOS16 = 0xD600 | 0x0020 | 0x0001;
-   \   0000C4   B24021D6E805 MOV.W   #0xd621, &0x5e8
-     85          	UCA1CTL1 &= ~UCSWRST; // Release from reset
-   \   0000CA   D2C3E005     BIC.B   #0x1, &0x5e0
-     86          	UCA1IE |= UCRXIE; // Enable RX interrupt
-   \   0000CE   92D3FA05     BIS.W   #0x1, &0x5fa
-     87          }
-   \   0000D2   1001         RETA
-   \   0000D4                REQUIRE _A_PBIFG_L
-   \   0000D4                REQUIRE _A_PBIE_L
-   \   0000D4                REQUIRE _A_PBIES_L
-   \   0000D4                REQUIRE TA0CTL
-   \   0000D4                REQUIRE TA0EX0
-   \   0000D4                REQUIRE TA0CCR0
-   \   0000D4                REQUIRE TA0CCTL0
-   \   0000D4                REQUIRE _A_ADC10CTL0_L
-   \   0000D4                REQUIRE _A_ADC10CTL1_L
-   \   0000D4                REQUIRE _A_ADC10CTL2_L
-   \   0000D4                REQUIRE _A_ADC10MCTL0_L
-   \   0000D4                REQUIRE _A_ADC10IE_L
-   \   0000D4                REQUIRE _A_UCA1CTLW0_L
-   \   0000D4                REQUIRE _A_UCA1BRW_L
-   \   0000D4                REQUIRE _A_UCA1MCTLW_L
-   \   0000D4                REQUIRE _A_UCA1IE_L
-     88          
-     89          
-     90          #pragma vector=USCI_A1_VECTOR
+     78          }
+   \   0000B0   1001         RETA
+   \   0000B2                REQUIRE _A_PBIFG_L
+   \   0000B2                REQUIRE _A_PBIE_L
+   \   0000B2                REQUIRE _A_PBIES_L
+   \   0000B2                REQUIRE TA0CTL
+   \   0000B2                REQUIRE TA0EX0
+   \   0000B2                REQUIRE TA0CCR0
+   \   0000B2                REQUIRE TA0CCTL0
+   \   0000B2                REQUIRE _A_ADC10CTL0_L
+   \   0000B2                REQUIRE _A_ADC10CTL1_L
+   \   0000B2                REQUIRE _A_ADC10CTL2_L
+   \   0000B2                REQUIRE _A_ADC10MCTL0_L
+   \   0000B2                REQUIRE _A_ADC10IE_L
+     79          
+     80          
+     81          #pragma vector=USCI_A1_VECTOR
 
    \                                 In  segment ISR_CODE, align 2
-     91          __interrupt void USCI_A1_ISR(void)
+     82          __interrupt void USCI_A1_ISR(void)
    \                     USCI_A1_ISR:
-     92          {
+     83          {
    \   000000   3F15         PUSHM.W #0x4, R15
-     93          	switch(__even_in_range(UCA1IV,0x08))
+     84          	switch(__even_in_range(UCA1IV,0x08))
    \   000002   1F42FE05     MOV.W   &0x5fe, R15
    \   000006   E00F         ADDA    R15, PC
    \                     `?<Jumptable for USCI_A1_ISR>_0`:
@@ -325,51 +285,51 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\interrupts.c
    \   00000C   123C         JMP     ??USCI_A1_ISR_1
    \   00000E   113C         JMP     ??USCI_A1_ISR_1
    \   000010   103C         JMP     ??USCI_A1_ISR_1
-     94          	{
-     95          		case 0: // Vector 0 - no interrupt
-     96          			break;
-     97          		case 2: // Vector 2 - RXIFG			
-     98          			RxChars[RxIndex] = UCA1RXBUF; // RX -> USB_Char_Rx character
+     85          	{
+     86          		case 0: // Vector 0 - no interrupt
+     87          			break;
+     88          		case 2: // Vector 2 - RXIFG			
+     89          			RxChars[RxIndex] = UCA1RXBUF; // RX -> USB_Char_Rx character
    \                     ??USCI_A1_ISR_2:
    \   000012   1E42EC05     MOV.W   &0x5ec, R14
    \   000016   1F42....     MOV.W   &RxIndex, R15
    \   00001A   CF4E....     MOV.B   R14, RxChars(R15)
-     99          			RxIndex++;
+     90          			RxIndex++;
    \   00001E   9253....     ADD.W   #0x1, &RxIndex
-    100          			RxIndex %= sizeof RxChars;
+     91          			RxIndex %= sizeof RxChars;
    \   000022   1C42....     MOV.W   &RxIndex, R12
    \   000026   3E401000     MOV.W   #0x10, R14
    \   00002A   ........     CALLA   #?DivMod16u
    \   00002E   824E....     MOV.W   R14, &RxIndex
-    101          			break;
-    102          		case 4: // Vector 4 – TXIFG
-    103          			break;
-    104          		default: 
-    105          			break;
-    106          	}
-    107          }
+     92          			break;
+     93          		case 4: // Vector 4 – TXIFG
+     94          			break;
+     95          		default: 
+     96          			break;
+     97          	}
+     98          }
    \                     ??USCI_A1_ISR_1:
    \   000032   3C17         POPM.W  #0x4, R15
    \   000034   0013         RETI
    \   000036                REQUIRE _A_UCA1RXBUF_L
    \   000036                REQUIRE UCA1IV
-    108          
-    109          
-    110          
-    111          // ADC10 interrupt service routine
-    112          // ADC_Right_Detector; // A00 ADC10INCH_0 - P1.0
-    113          // ADC_Left_Detector; // A01 ADC10INCH_1 - P1.1
-    114          // ADC_Thumb; // A03 ADC10INCH_3 - P1.3
-    115          // ADC_Temp; // A10 ADC10INCH_10 – Temperature REF module
-    116          // ADC_Bat; // A11 ADC10INCH_11 - Internal
-    117          #pragma vector=ADC10_VECTOR
+     99          
+    100          
+    101          
+    102          // ADC10 interrupt service routine
+    103          // ADC_Right_Detector; // A00 ADC10INCH_0 - P1.0
+    104          // ADC_Left_Detector; // A01 ADC10INCH_1 - P1.1
+    105          // ADC_Thumb; // A03 ADC10INCH_3 - P1.3
+    106          // ADC_Temp; // A10 ADC10INCH_10 – Temperature REF module
+    107          // ADC_Bat; // A11 ADC10INCH_11 - Internal
+    108          #pragma vector=ADC10_VECTOR
 
    \                                 In  segment ISR_CODE, align 2
-    118          __interrupt void ADC10_ISR(void)
+    109          __interrupt void ADC10_ISR(void)
    \                     ADC10_ISR:
-    119          {
+    110          {
    \   000000   0F12         PUSH.W  R15
-    120          	switch(__even_in_range(ADC10IV,12)) 
+    111          	switch(__even_in_range(ADC10IV,12)) 
    \   000002   1F421E07     MOV.W   &0x71e, R15
    \   000006   E00F         ADDA    R15, PC
    \                     `?<Jumptable for ADC10_ISR>_0`:
@@ -380,20 +340,20 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\interrupts.c
    \   000010   283C         JMP     ??ADC10_ISR_1
    \   000012   273C         JMP     ??ADC10_ISR_1
    \   000014   003C         JMP     ??ADC10_ISR_5
-    121          	{
-    122          		case 0: break; // No interrupt
-    123          		case 2: break; // conversion result overflow
-    124          		case 4: break; // conversion time overflow
-    125          		case 6: break; // ADC10HI
-    126          		case 8: break; // ADC10LO
-    127          		case 10: break; // ADC10IN
-    128          		case 12:
-    129                            
-    130                                  ADC10CTL0 &= ~ADC10ENC;
+    112          	{
+    113          		case 0: break; // No interrupt
+    114          		case 2: break; // conversion result overflow
+    115          		case 4: break; // conversion time overflow
+    116          		case 6: break; // ADC10HI
+    117          		case 8: break; // ADC10LO
+    118          		case 10: break; // ADC10IN
+    119          		case 12:
+    120                            
+    121                                  ADC10CTL0 &= ~ADC10ENC;
    \                     ??ADC10_ISR_5:
    \   000016   A2C30007     BIC.W   #0x2, &0x700
-    131          				
-    132          			switch(AdcChannel)//Put an incrementing break statement to update different channels in turn
+    122          				
+    123          			switch(AdcChannel)//Put an incrementing break statement to update different channels in turn
    \   00001A   1F42....     MOV.W   &AdcChannel, R15
    \   00001E   0F83         SUB.W   #0x0, R15
    \   000020   0524         JEQ     ??ADC10_ISR_2
@@ -402,49 +362,49 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\interrupts.c
    \   000026   1F83         SUB.W   #0x1, R15
    \   000028   1224         JEQ     ??ADC10_ISR_4
    \   00002A   183C         JMP     ??ADC10_ISR_0
-    133          			{
-    134          				case 0: 
-    135          					ADC_LeftIR = ADC10MEM0;
+    124          			{
+    125          				case 0: 
+    126          					ADC_LeftIR = ADC10MEM0;
    \                     ??ADC10_ISR_2:
    \   00002C   92421207.... MOV.W   &0x712, &ADC_LeftIR
-    136          					ADC10MCTL0 = ADC10INCH_1;
+    127          					ADC10MCTL0 = ADC10INCH_1;
    \   000032   92430A07     MOV.W   #0x1, &0x70a
-    137          					AdcChannel = 1;
+    128          					AdcChannel = 1;
    \   000036   9243....     MOV.W   #0x1, &AdcChannel
-    138          					break;
+    129          					break;
    \   00003A   103C         JMP     ??ADC10_ISR_0
-    139          				case 1:
-    140          					ADC_RightIR = ADC10MEM0;
+    130          				case 1:
+    131          					ADC_RightIR = ADC10MEM0;
    \                     ??ADC10_ISR_3:
    \   00003C   92421207.... MOV.W   &0x712, &ADC_RightIR
-    141          					ADC10MCTL0 = ADC10INCH_3;
+    132          					ADC10MCTL0 = ADC10INCH_3;
    \   000042   B24003000A07 MOV.W   #0x3, &0x70a
-    142          					AdcChannel = 2;
+    133          					AdcChannel = 2;
    \   000048   A243....     MOV.W   #0x2, &AdcChannel
-    143          					break;
+    134          					break;
    \   00004C   073C         JMP     ??ADC10_ISR_0
-    144          				case 2:
-    145          					ADC_Thumb = ADC10MEM0; 
+    135          				case 2:
+    136          					ADC_Thumb = ADC10MEM0; 
    \                     ??ADC10_ISR_4:
    \   00004E   92421207.... MOV.W   &0x712, &ADC_Thumb
-    146          					ADC10MCTL0 = ADC10INCH_0;
+    137          					ADC10MCTL0 = ADC10INCH_0;
    \   000054   82430A07     MOV.W   #0x0, &0x70a
-    147          					AdcChannel = 0;
+    138          					AdcChannel = 0;
    \   000058   8243....     MOV.W   #0x0, &AdcChannel
-    148          					break;
-    149          				default:
-    150          					break;
-    151          			}
-    152                                  
-    153                                  ADC10CTL0 |= ADC10ENC | ADC10SC;
+    139          					break;
+    140          				default:
+    141          					break;
+    142          			}
+    143                                  
+    144                                  ADC10CTL0 |= ADC10ENC | ADC10SC;
    \                     ??ADC10_ISR_0:
    \   00005C   B2D003000007 BIS.W   #0x3, &0x700
-    154                                  break;
-    155                                  
-    156          		default: 
-    157          			break;
-    158          	}
-    159          }
+    145                                  break;
+    146                                  
+    147          		default: 
+    148          			break;
+    149          	}
+    150          }
    \                     ??ADC10_ISR_1:
    \   000062   3F41         POP.W   R15
    \   000064   0013         RETI
@@ -452,61 +412,61 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\interrupts.c
    \   000066                REQUIRE _A_ADC10MEM0_L
    \   000066                REQUIRE _A_ADC10MCTL0_L
    \   000066                REQUIRE _A_ADC10IV_L
-    160          
-    161          #pragma vector=PORT4_VECTOR
+    151          
+    152          #pragma vector=PORT4_VECTOR
 
    \                                 In  segment ISR_CODE, align 2
-    162          __interrupt void Port_4(void)
+    153          __interrupt void Port_4(void)
    \                     Port_4:
-    163          {
-    164          	if(P4IFG & SW1)
+    154          {
+    155          	if(P4IFG & SW1)
    \   000000   D2B33D02     BIT.B   #0x1, &0x23d
    \   000004   0628         JNC     ??Port_4_0
-    165          	{
-    166          		P4IFG &= ~SW1;
+    156          	{
+    157          		P4IFG &= ~SW1;
    \   000006   D2C33D02     BIC.B   #0x1, &0x23d
-    167          		P1OUT |= IR_LED;
+    158          		P1OUT |= IR_LED;
    \   00000A   E2D20202     BIS.B   #0x4, &0x202
-    168          		PJOUT |= LED1;
+    159          		PJOUT |= LED1;
    \   00000E   92D32203     BIS.W   #0x1, &0x322
-    169          	}
-    170          			
-    171          	if(P4IFG & SW2)
+    160          	}
+    161          			
+    162          	if(P4IFG & SW2)
    \                     ??Port_4_0:
    \   000012   E2B33D02     BIT.B   #0x2, &0x23d
    \   000016   0628         JNC     ??Port_4_1
-    172          	{
-    173          		P4IFG &= ~SW2;
+    163          	{
+    164          		P4IFG &= ~SW2;
    \   000018   E2C33D02     BIC.B   #0x2, &0x23d
-    174          		P1OUT &= ~IR_LED;
+    165          		P1OUT &= ~IR_LED;
    \   00001C   E2C20202     BIC.B   #0x4, &0x202
-    175          		PJOUT &= ~LED1;
+    166          		PJOUT &= ~LED1;
    \   000020   92C32203     BIC.W   #0x1, &0x322
-    176          	}		
-    177          }
+    167          	}		
+    168          }
    \                     ??Port_4_1:
    \   000024   0013         RETI
    \   000026                REQUIRE _A_PBIFG_L
    \   000026                REQUIRE _A_PAOUT_L
    \   000026                REQUIRE _A_PJOUT_L
-    178          
-    179          #pragma vector=TIMER0_A0_VECTOR
+    169          
+    170          #pragma vector=TIMER0_A0_VECTOR
 
    \                                 In  segment ISR_CODE, align 2
-    180          __interrupt void Timer0_A0(void)
+    171          __interrupt void Timer0_A0(void)
    \                     Timer0_A0:
-    181          {
-    182          	P3OUT ^= TEST_PROBE;
+    172          {
+    173          	P3OUT ^= TEST_PROBE;
    \   000000   F2E22202     XOR.B   #0x8, &0x222
-    183          	TimeMsec++;
+    174          	TimeMsec++;
    \   000004   9253....     ADD.W   #0x1, &TimeMsec
-    184                  
-    185                  if(MotorTimer > 0)
+    175                  
+    176                  if(MotorTimer > 0)
    \   000008   9293....     CMP.W   #0x1, &MotorTimer
    \   00000C   0238         JL      ??Timer0_A0_0
-    186                    MotorTimer--;
+    177                    MotorTimer--;
    \   00000E   B253....     ADD.W   #0xffff, &MotorTimer
-    187          }
+    178          }
    \                     ??Timer0_A0_0:
    \   000012   0013         RETI
    \   000014                REQUIRE _A_PBOUT_L
@@ -534,37 +494,37 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\interrupts.c
    \                                 In  segment DATA16_ID, align 2, align-sorted
    \                     `?<Initializer for sw2Debounce>`:
    \   000000   FFFF         DC16 -1
-    188          
-    189          /*
-    190          #pragma vector=TIMER0_A1_VECTOR
-    191          __interrupt void Timer0_A1(void)
-    192          {
-    193          	P4IE |= SW1 | SW2;
-    194                  PJOUT &= ~LED3;   		 //Turn off debouce LED
-    195            
-    196            
-    197            
-    198                  switch(TA0IV)
-    199          	{
-    200          		case 2: 					//CCR1
-    201          			if( !(P4IE & SW1) ) 	//sw1 was disabled
-    202          				P4IE |= SW1;
-    203          			else if( !(P4IE & SW2) ) //sw2 was disabled
-    204          				P4IE |= SW2;
+    179          
+    180          /*
+    181          #pragma vector=TIMER0_A1_VECTOR
+    182          __interrupt void Timer0_A1(void)
+    183          {
+    184          	P4IE |= SW1 | SW2;
+    185                  PJOUT &= ~LED3;   		 //Turn off debouce LED
+    186            
+    187            
+    188            
+    189                  switch(TA0IV)
+    190          	{
+    191          		case 2: 					//CCR1
+    192          			if( !(P4IE & SW1) ) 	//sw1 was disabled
+    193          				P4IE |= SW1;
+    194          			else if( !(P4IE & SW2) ) //sw2 was disabled
+    195          				P4IE |= SW2;
+    196          			
+    197                            
+    198                                  P4IE |= SW1 | SW2;
+    199          			PJOUT &= ~LED4;   		 //Turn off debouce LED
+    200          			TA0CCTL1 &= ~CCIE; 		 //Turn off this interrupt
+    201          			break;
+    202          			
+    203          		case 4:						//CCR2
+    204          			break;
     205          			
-    206                            
-    207                                  P4IE |= SW1 | SW2;
-    208          			PJOUT &= ~LED4;   		 //Turn off debouce LED
-    209          			TA0CCTL1 &= ~CCIE; 		 //Turn off this interrupt
-    210          			break;
-    211          			
-    212          		case 4:						//CCR2
-    213          			break;
-    214          			
-    215          		default:
-    216          			break;
-    217          	}
-    218          }*/
+    206          		default:
+    207          			break;
+    208          	}
+    209          }*/
 
    Maximum stack usage in bytes:
 
@@ -588,7 +548,7 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\interrupts.c
        2  ??Timer0_A0??INTVEC 90
        2  ??USCI_A1_ISR??INTVEC 86
      102  ADC10_ISR
-     212  Init_Interrupts
+     178  Init_Interrupts
       38  Port_4
        2  TA0CCR0
        2  TA0CCTL0
@@ -610,25 +570,21 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\interrupts.c
        2  _A_PBIFG_L
        2  _A_PBOUT_L
        2  _A_PJOUT_L
-       2  _A_UCA1BRW_L
-       2  _A_UCA1CTLW0_L
-       2  _A_UCA1IE_L
-       2  _A_UCA1MCTLW_L
        2  _A_UCA1RXBUF_L
        2  sw1Debounce
        2  sw2Debounce
 
  
- 212 bytes in segment CODE
-  46 bytes in segment DATA16_AN
+ 178 bytes in segment CODE
+  38 bytes in segment DATA16_AN
    4 bytes in segment DATA16_I
    4 bytes in segment DATA16_ID
    8 bytes in segment INTVEC
  214 bytes in segment ISR_CODE
  
- 426 bytes of CODE  memory
+ 392 bytes of CODE  memory
    4 bytes of CONST memory (+  8 bytes shared)
-   4 bytes of DATA  memory (+ 46 bytes shared)
+   4 bytes of DATA  memory (+ 38 bytes shared)
 
 Errors: none
 Warnings: none

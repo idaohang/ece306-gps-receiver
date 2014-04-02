@@ -1,3 +1,31 @@
+//---------------------------------------------
+//Shared Global Variables
+
+extern char *display_1;
+extern char *display_2;
+
+volatile extern unsigned int TimeMsec;
+volatile extern unsigned int Time_Sequence;
+volatile extern unsigned int CommTimer;
+volatile extern unsigned int MotorTimer;
+volatile extern unsigned int CommTimer;
+volatile extern unsigned int DebounceTimer;
+
+volatile extern int ADC_Thumb;
+volatile extern int ADC_LeftIR; 
+volatile extern int ADC_RightIR;
+
+extern char UsbRx[128];
+extern char SerialRx[128];
+
+volatile extern int LeftMotorPower;
+volatile extern int RightMotorPower;
+
+volatile extern char Last_SW1_State;
+volatile extern char Last_SW2_State;
+
+//Function Prototypes ---------------------------
+
 // Function prototypes for precompiled
 __interrupt void Timer2_B0_ISR(void);
  __interrupt void TIMER2_B1_ISR(void);
@@ -73,7 +101,9 @@ void figureEight(void);
 void triangle(void);
 
 //Serial IO Prototypes
-void TxByte(char c);
-void RxByte(char* c);
-void TxArray(char* array, int length);
-void RxArray(char* array, int* i, int length);
+void ResetBuffer(char*);
+void Comm_Process(void);
+char readUsb(void);
+void writeUsb(char c);
+char readSerial(void);
+void writeSerial(char c);

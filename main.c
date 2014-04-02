@@ -44,6 +44,7 @@ void main(void)
 	TimeMsec = RESET_TIME;
 	Init_Timers(); 				// Initialize Timers
 	Init_LCD();				// Initialize LCD     
+	init_gps();
         
         
         

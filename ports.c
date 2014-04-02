@@ -232,10 +232,12 @@ void Init_PortJ(void)
 	
 	PJOUT = SET_LOW;
 	
-	PJDIR = INPUT;
-	PJDIR = (GPS_PWR * OUTPUT) |
+	PJDIR &= ~GPS_PWRCHK;
+	PJDIR |= (GPS_PWR * OUTPUT) |
 		(GPS_RESET * OUTPUT) |
 		(GPS_PWRCNTL * OUTPUT);
 		
 	PJREN = NO_RESIST;
+        
+        PJOUT |= GPS_PWR | GPS_RESET;
 }

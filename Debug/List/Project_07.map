@@ -7,7 +7,7 @@ Warning[w6]: Type conflict for external/entry "MotorTimer", in module motor_cont
 #                                                                              #
 #      IAR Universal Linker V5.7.0.39                                          #
 #                                                                              #
-#           Link time     =  01/Apr/2014  21:40:29                             #
+#           Link time     =  01/Apr/2014  22:26:00                             #
 #           Target CPU    =  MSP430                                            #
 #           List file     =  C:\Users\Nathan\Documents\GitHub\ece306-gps-recei #
 #                            ver\Debug\List\Project_07.map                     #
@@ -179,7 +179,7 @@ clocks ( C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\Debug\Obj\clocks.r
         _A_CSCTL2_L                         0164
         _A_CSCTL3_L                         0166
         _A_WDTCTL_L                         015C
-        Init_Clocks                         C656
+        Init_Clocks                         C6C4
         ?setjmp_save_r4                     NOT NEEDED
         ?setjmp_save_r5                     NOT NEEDED
         CSCTL0                              0160
@@ -198,7 +198,7 @@ clocks ( C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\Debug\Obj\clocks.r
         WDTCTL_H                            015D
         WDTCTL_L                            015C
 init ( C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\Debug\Obj\init.r43 )
-        Init_Conditions                     C7FE
+        Init_Conditions                     C870
         ?setjmp_save_r4                     NOT NEEDED
         ?setjmp_save_r5                     NOT NEEDED
 interrupts ( C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\Debug\Obj\interrupts.r43 )
@@ -216,7 +216,7 @@ interrupts ( C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\Debug\Obj\inte
         TA0EX0                              0360
         sw1Debounce                         NOT NEEDED
         sw2Debounce                         NOT NEEDED
-        Init_Interrupts                     C3B4
+        Init_Interrupts                     C3BC
         ?setjmp_save_r4                     NOT NEEDED
         ?setjmp_save_r5                     NOT NEEDED
         ADC10CTL0                           0700
@@ -258,21 +258,21 @@ LCD ( C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\Debug\Obj\LCD.r43 )
         current_line                        1C22
         update_display_count                NOT NEEDED
         display_update_time                 NOT NEEDED
-        Init_SPI_B0                         C60C
-        SPI_B0_write                        C764
-        spi_rs_data                         C7BE
-        spi_rs_command                      C7D6
-        spi_chipselect_idle                 C7DE
-        spi_chipselect_active               C7CE
-        spi_reset_idle                      C7C6
-        spi_reset_active                    C7E6
-        Init_LCD                            C466
-        lcd_write                           C538
+        Init_SPI_B0                         C67A
+        SPI_B0_write                        C7E6
+        spi_rs_data                         C830
+        spi_rs_command                      C848
+        spi_chipselect_idle                 C850
+        spi_chipselect_active               C840
+        spi_reset_idle                      C838
+        spi_reset_active                    C858
+        Init_LCD                            C472
+        lcd_write                           C5A6
         lcd_command                         NOT NEEDED
-        lcd_putc                            C5AC
+        lcd_putc                            C61A
         lcd_puts                            NOT NEEDED
-        lcd_out                             C632
-        Display_Process                     C708
+        lcd_out                             C6A0
+        Display_Process                     C7A6
         ?setjmp_save_r4                     NOT NEEDED
         ?setjmp_save_r5                     NOT NEEDED
         PAOUT                               0202
@@ -295,7 +295,7 @@ main ( C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\Debug\Obj\main.r43 )
         Time_Sequence                       1C0E
         led_smclk                           NOT NEEDED
         one_time                            1C23
-        main                                C4F4
+        main                                C562
         ?setjmp_save_r4                     NOT NEEDED
         ?setjmp_save_r5                     NOT NEEDED
 motor_control ( C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\Debug\Obj\motor_control.r43 )
@@ -339,12 +339,12 @@ ports ( C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\Debug\Obj\ports.r43
         _A_PJREN_L                          0326
         _A_PJSEL0_L                         032A
         _A_PJSEL1_L                         032C
-        Init_Ports                          C750
-        Init_Port1                          C578
-        Init_Port2                          C5DC
-        Init_Port3                          C6B6
-        Init_Port4                          C678
-        Init_PortJ                          C6D2
+        Init_Ports                          C7D2
+        Init_Port1                          C5E6
+        Init_Port2                          C64A
+        Init_Port3                          C740
+        Init_Port4                          C6E6
+        Init_PortJ                          C708
         ?setjmp_save_r4                     NOT NEEDED
         ?setjmp_save_r5                     NOT NEEDED
         PAOUT                               0202
@@ -407,12 +407,14 @@ serial_io ( C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\Debug\Obj\seria
         _A_UCA0BRW_L                        05C6
         _A_UCA0MCTLW_L                      05C8
         _A_UCA0RXBUF_L                      05CC
+        _A_UCA0TXBUF_L                      05CE
         _A_UCA0IE_L                         05DA
         UCA0IV                              05DE
         _A_UCA1CTLW0_L                      05E0
         _A_UCA1BRW_L                        05E6
         _A_UCA1MCTLW_L                      05E8
         _A_UCA1RXBUF_L                      05EC
+        _A_UCA1TXBUF_L                      05EE
         _A_UCA1IE_L                         05FA
         UCA1IV                              05FE
         UsbRx                               1C24
@@ -429,10 +431,10 @@ serial_io ( C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\Debug\Obj\seria
         serialTx_W                          1C16
         USCI_A0_ISR                         C2A0
         USCI_A1_ISR                         C2D6
-        Serial_Init                         NOT NEEDED
-        writeUsb                            C78A
+        Serial_Init                         C500
+        writeUsb                            C7FA
         readUsb                             NOT NEEDED
-        writeSerial                         C79C
+        writeSerial                         C7BE
         readSerial                          NOT NEEDED
         USCI_A1_ISR::??INTVEC 86            FFE6
         USCI_A0_ISR::??INTVEC 96            FFF0
@@ -450,6 +452,9 @@ serial_io ( C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\Debug\Obj\seria
         UCA0RXBUF                           05CC
         UCA0RXBUF_H                         05CD
         UCA0RXBUF_L                         05CC
+        UCA0TXBUF                           05CE
+        UCA0TXBUF_H                         05CF
+        UCA0TXBUF_L                         05CE
         UCA0IE                              05DA
         UCA0IE_H                            05DB
         UCA0IE_L                            05DA
@@ -465,6 +470,9 @@ serial_io ( C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\Debug\Obj\seria
         UCA1RXBUF                           05EC
         UCA1RXBUF_H                         05ED
         UCA1RXBUF_L                         05EC
+        UCA1TXBUF                           05EE
+        UCA1TXBUF_H                         05EF
+        UCA1TXBUF_L                         05EE
         UCA1IE                              05FA
         UCA1IE_H                            05FB
         UCA1IE_L                            05FA
@@ -484,7 +492,7 @@ switch ( C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\Debug\Obj\switch.r
         PBIFG_H                             023D
         PBIFG_L                             023C
 system ( C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\Debug\Obj\system.r43 )
-        enable_interrupts                   C7FA
+        enable_interrupts                   C86C
         ?setjmp_save_r4                     NOT NEEDED
         ?setjmp_save_r5                     NOT NEEDED
 timers ( C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\Debug\Obj\timers.r43 )
@@ -493,8 +501,8 @@ timers ( C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\Debug\Obj\timers.r
         CommTimer                           1C1A
         MotorTimer                          1C1C
         DebounceTimer                       1C1E
-        Timer0_A0                           C346
-        Init_Timers                         C7EE
+        Timer0_A0                           C34E
+        Init_Timers                         C860
         waitMsec                            NOT NEEDED
         Timer0_A0::??INTVEC 90              FFEA
         ?setjmp_save_r4                     NOT NEEDED
@@ -513,18 +521,18 @@ timersB2 ( C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\Debug\Obj\timers
         five_msec_count                     1C20
         sleeping                            NOT NEEDED
         sleeptime                           NOT NEEDED
-        Init_Timer_B2                       C6EE
+        Init_Timer_B2                       C75C
         measure_delay                       NOT NEEDED
-        usleep10                            C720
-        five_msec_sleep                     C7AE
+        usleep10                            C776
+        five_msec_sleep                     C820
         led_blink                           NOT NEEDED
         gps_resetting                       NOT NEEDED
         gps_2b_reset                        NOT NEEDED
         reset_gps_time                      NOT NEEDED
         transmit_delay                      NOT NEEDED
         transmit_time                       NOT NEEDED
-        Timer2_B0_ISR                       C36E
-        TIMER2_B1_ISR                       C38A
+        Timer2_B0_ISR                       C376
+        TIMER2_B1_ISR                       C392
         TIMER2_B1_ISR::??INTVEC 68          FFD4
         Timer2_B0_ISR::??INTVEC 70          FFD6
         ?setjmp_save_r4                     NOT NEEDED
@@ -532,15 +540,15 @@ timersB2 ( C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\Debug\Obj\timers
 ?abort ( C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\430\LIB\DLIB\dl430xsfn.r43 )
         abort                               NOT NEEDED
 ?__dbg_break ( C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\430\LIB\DLIB\dl430xsfn.r43 )
-        __DebugBreak                        C802
+        __DebugBreak                        C874
 ?__dwrite ( C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\430\LIB\DLIB\dl430xsfn.r43 )
         __dwrite                            NOT NEEDED
 ?__exit ( C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\430\LIB\DLIB\dl430xsfn.r43 )
-        __exit                              C738
+        __exit                              C78E
 ?__write ( C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\430\LIB\DLIB\dl430xsfn.r43 )
         __write                             NOT NEEDED
 ?_exit ( C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\430\LIB\DLIB\dl430xsfn.r43 )
-        _exit                               C7F2
+        _exit                               C864
         __cstart_call_dtors                 NOT NEEDED
         __cstart_closeall                   NOT NEEDED
         __cstart_clearlocks                 NOT NEEDED
@@ -568,12 +576,12 @@ lowinit ( C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\430\LIB\DLIB
 ?reset_vector ( C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\430\LIB\DLIB\dl430xsfn.r43 )
         ?reset_vector                       FFFE
 ?exit ( C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\430\LIB\DLIB\dl430xsfn.r43 )
-        exit                                C7F6
+        exit                                C868
 ?malloc ( C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\430\LIB\DLIB\dl430xsfn.r43 )
         malloc                              NOT NEEDED
 ?DivMod816u ( C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\430\LIB\DLIB\dl430xsfn.r43 )
-        ?DivMod8u                           C69A
-        ?DivMod16u                          C69E
+        ?DivMod8u                           C724
+        ?DivMod16u                          C728
 ?DivMod816s ( C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\430\LIB\DLIB\dl430xsfn.r43 )
         ?DivMod8s                           NOT NEEDED
         ?DivMod16s                          NOT NEEDED
@@ -582,7 +590,7 @@ lowinit ( C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\430\LIB\DLIB
 ?memmove ( C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\430\LIB\DLIB\dl430xsfn.r43 )
         memmove                             NOT NEEDED
 ?memzero ( C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\430\LIB\DLIB\dl430xsfn.r43 )
-        __data16_memzero                    C778
+        __data16_memzero                    C80E
         __data16_memcpy                     NOT NEEDED
         __data16_memmove                    NOT NEEDED
 ?setjmp ( C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\430\LIB\DLIB\dl430xsfn.r43 )
@@ -634,15 +642,15 @@ adc                   102      8      4
   + common
 clocks                 34            10
 init                    4
-interrupts            178            16
+interrupts            182            16
   + shared                            2
 main                   68      3            34
 motor_control
   + shared                            2
 ports                 210            26
-serial_io             144    520     24
+serial_io             246    520     28
   + common             98
-switch                 58             2
+switch                 66             2
   + common             66
 system                  4
 timers                 44      8
@@ -652,7 +660,7 @@ timersB2              136      2     14
 N/A (command line)           160
 N/A (alignment)
 ----------          -----    ---    ---     --
-Total:              1 508    708    116     34
+Total:              1 622    708    120     34
   + common             98
 
 
@@ -683,11 +691,11 @@ DATA16_AN                              015C - 015D               2   rel    0
                                        046E - 046F               2 
                                        05C0 - 05C1               2 
                                        05C6 - 05C9               4 
-                                       05CC - 05CD               2 
+                                       05CC - 05CF               4 
                                        05DA - 05DB               2 
                                        05DE - 05E1               4 
                                        05E6 - 05E9               4 
-                                       05EC - 05ED               2 
+                                       05EC - 05EF               4 
                                        05FA - 05FB               2 
                                        05FE - 05FF               2 
                                        0640 - 0641               2 
@@ -704,8 +712,8 @@ DATA16_Z                               1C00 - 1E23             224   rel    1
 CSTACK                                 1F60 - 1FFF              A0   rel    1
 DATA16_C                               C200 - C221              22   rel    0
 CSTART                                 C222 - C239              18   rel    1
-ISR_CODE                               C23A - C3B3             17A   rel    1
-<CODE> 1                               C3B4 - C803             450   rel    1
+ISR_CODE                               C23A - C3BB             182   rel    1
+<CODE> 1                               C3BC - C875             4BA   rel    1
 INTVEC                                 FF90 - FFF1              62   com    1
 RESET                                  FFFE - FFFF               2   rel    1
 
@@ -715,8 +723,8 @@ RESET                                  FFFE - FFFF               2   rel    1
                 *                                      *
                 ****************************************
 
- 1 606 bytes of CODE  memory
-   708 bytes of DATA  memory (+ 116 absolute )
+ 1 720 bytes of CODE  memory
+   708 bytes of DATA  memory (+ 120 absolute )
     34 bytes of CONST memory
 
 Errors: none

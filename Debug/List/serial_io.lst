@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       01/Apr/2014  21:40:02 #
+# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       01/Apr/2014  22:25:07 #
 # Copyright 1996-2013 IAR Systems AB.                                         #
 #                                                                             #
 #    __rt_version  =  3                                                       #
@@ -56,6 +56,11 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\serial_io.c
    \                     _A_UCA0RXBUF_L:
    \   000000                DS8 2
 
+   \                                 In  segment DATA16_AN, at 0x5ce
+   \   union <unnamed> _A_UCA0TXBUF_L
+   \                     _A_UCA0TXBUF_L:
+   \   000000                DS8 2
+
    \                                 In  segment DATA16_AN, at 0x5da
    \   union <unnamed> _A_UCA0IE_L
    \                     _A_UCA0IE_L:
@@ -84,6 +89,11 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\serial_io.c
    \                                 In  segment DATA16_AN, at 0x5ec
    \   union <unnamed> _A_UCA1RXBUF_L
    \                     _A_UCA1RXBUF_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x5ee
+   \   union <unnamed> _A_UCA1TXBUF_L
+   \                     _A_UCA1TXBUF_L:
    \   000000                DS8 2
 
    \                                 In  segment DATA16_AN, at 0x5fa
@@ -328,11 +338,12 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\serial_io.c
    \   000000   1F42....     MOV.W   &usbTx_W, R15
    \   000004   CF4C....     MOV.B   R12, UsbTx(R15)
    \   000008   9253....     ADD.W   #0x1, &usbTx_W
-     82          	UCA0IE |= UCTXIE;
-   \   00000C   A2D3DA05     BIS.W   #0x2, &0x5da
+     82                  UCA0TXBUF = c;
+   \   00000C   4C4C         MOV.B   R12, R12
+   \   00000E   824CCE05     MOV.W   R12, &0x5ce
      83          }
-   \   000010   1001         RETA
-   \   000012                REQUIRE _A_UCA0IE_L
+   \   000012   1001         RETA
+   \   000014                REQUIRE _A_UCA0TXBUF_L
      84          
 
    \                                 In  segment CODE, align 2
@@ -365,11 +376,12 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\serial_io.c
    \   000000   1F42....     MOV.W   &serialTx_W, R15
    \   000004   CF4C....     MOV.B   R12, SerialTx(R15)
    \   000008   9253....     ADD.W   #0x1, &serialTx_W
-     96          	UCA1IE |= UCTXIE;
-   \   00000C   A2D3FA05     BIS.W   #0x2, &0x5fa
+     96                  UCA1TXBUF = c;
+   \   00000C   4C4C         MOV.B   R12, R12
+   \   00000E   824CEE05     MOV.W   R12, &0x5ee
      97          }
-   \   000010   1001         RETA
-   \   000012                REQUIRE _A_UCA1IE_L
+   \   000012   1001         RETA
+   \   000014                REQUIRE _A_UCA1TXBUF_L
      98          
 
    \                                 In  segment CODE, align 2
@@ -434,11 +446,13 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\serial_io.c
        2  _A_UCA0IE_L
        2  _A_UCA0MCTLW_L
        2  _A_UCA0RXBUF_L
+       2  _A_UCA0TXBUF_L
        2  _A_UCA1BRW_L
        2  _A_UCA1CTLW0_L
        2  _A_UCA1IE_L
        2  _A_UCA1MCTLW_L
        2  _A_UCA1RXBUF_L
+       2  _A_UCA1TXBUF_L
       30  readSerial
       30  readUsb
        2  serialRx_R
@@ -449,19 +463,19 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\serial_io.c
        2  usbRx_W
        2  usbTx_R
        2  usbTx_W
-      18  writeSerial
-      18  writeUsb
+      20  writeSerial
+      20  writeUsb
 
  
- 194 bytes in segment CODE
-  24 bytes in segment DATA16_AN
+ 198 bytes in segment CODE
+  28 bytes in segment DATA16_AN
  528 bytes in segment DATA16_Z
    4 bytes in segment INTVEC
  108 bytes in segment ISR_CODE
  
- 302 bytes of CODE  memory
+ 306 bytes of CODE  memory
    0 bytes of CONST memory (+  4 bytes shared)
- 528 bytes of DATA  memory (+ 24 bytes shared)
+ 528 bytes of DATA  memory (+ 28 bytes shared)
 
 Errors: none
 Warnings: none

@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       01/Apr/2014  21:39:31 #
+# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       01/Apr/2014  22:25:07 #
 # Copyright 1996-2013 IAR Systems AB.                                         #
 #                                                                             #
 #    __rt_version  =  3                                                       #
@@ -116,98 +116,101 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\interrupts.c
       8          void Init_Interrupts(void)
    \                     Init_Interrupts:
       9          {
-     10          	P4IFG &= ~SW1;
-   \   000000   D2C33D02     BIC.B   #0x1, &0x23d
-     11          	P4IFG &= ~SW2;
-   \   000004   E2C33D02     BIC.B   #0x2, &0x23d
-     12          	P4IE |= SW1;
-   \   000008   D2D33B02     BIS.B   #0x1, &0x23b
-     13          	P4IE |= SW2;
-   \   00000C   E2D33B02     BIS.B   #0x2, &0x23b
-     14          	P4IES |= SW1 | SW2;
-   \   000010   F2D003003902 BIS.B   #0x3, &0x239
-     15          	
-     16          	TA0CTL |= TASSEL__SMCLK;
-   \   000016   B2D000024003 BIS.W   #0x200, &0x340
-     17          	TA0CTL |= TACLR;
-   \   00001C   A2D24003     BIS.W   #0x4, &0x340
-     18          	TA0CTL |= MC__UP;
-   \   000020   B2D010004003 BIS.W   #0x10, &0x340
-     19          	TA0CTL |= ID__2;
-   \   000026   B2D040004003 BIS.W   #0x40, &0x340
-     20          	TA0CTL &= ~TAIE;
-   \   00002C   A2C34003     BIC.W   #0x2, &0x340
-     21          	TA0CTL &= ~TAIFG;
-   \   000030   92C34003     BIC.W   #0x1, &0x340
-     22          	
-     23          	TA0EX0 = TAIDEX_7;
-   \   000034   B24007006003 MOV.W   #0x7, &0x360
+     10          	Serial_Init();
+   \   000000   ........     CALLA   #Serial_Init
+     11          	
+     12          	P4IFG &= ~SW1;
+   \   000004   D2C33D02     BIC.B   #0x1, &0x23d
+     13          	P4IFG &= ~SW2;
+   \   000008   E2C33D02     BIC.B   #0x2, &0x23d
+     14          	P4IE |= SW1;
+   \   00000C   D2D33B02     BIS.B   #0x1, &0x23b
+     15          	P4IE |= SW2;
+   \   000010   E2D33B02     BIS.B   #0x2, &0x23b
+     16          	P4IES |= SW1 | SW2;
+   \   000014   F2D003003902 BIS.B   #0x3, &0x239
+     17          	
+     18          	TA0CTL |= TASSEL__SMCLK;
+   \   00001A   B2D000024003 BIS.W   #0x200, &0x340
+     19          	TA0CTL |= TACLR;
+   \   000020   A2D24003     BIS.W   #0x4, &0x340
+     20          	TA0CTL |= MC__UP;
+   \   000024   B2D010004003 BIS.W   #0x10, &0x340
+     21          	TA0CTL |= ID__2;
+   \   00002A   B2D040004003 BIS.W   #0x40, &0x340
+     22          	TA0CTL &= ~TAIE;
+   \   000030   A2C34003     BIC.W   #0x2, &0x340
+     23          	TA0CTL &= ~TAIFG;
+   \   000034   92C34003     BIC.W   #0x1, &0x340
      24          	
-     25          	TA0CCR0 = TA0_ROLLOVER; //1ms
-   \   00003A   B240F4015203 MOV.W   #0x1f4, &0x352
-     26          	TA0CCTL0 |= CCIE;    
-   \   000040   B2D010004203 BIS.W   #0x10, &0x342
-     27          		
-     28          		
-     29          	//Init ADC
-     30          #define RESET_STATE (0); 
-     31          	ADC10CTL0 = RESET_STATE; // Clear ADC10CTL0
-   \   000046   82430007     MOV.W   #0x0, &0x700
-     32          	ADC10CTL0 |= ADC10SHT_2; // 16 ADC clocks
-   \   00004A   B2D000020007 BIS.W   #0x200, &0x700
-     33          	ADC10CTL0 &= ~ADC10MSC; // Single Sequence
-   \   000050   B2C080000007 BIC.W   #0x80, &0x700
-     34          	ADC10CTL0 |= ADC10ON; // ADC ON - Core Enabled
-   \   000056   B2D010000007 BIS.W   #0x10, &0x700
-     35          	
-     36          	ADC10CTL1 = RESET_STATE; // Clear ADC10CTL1
-   \   00005C   82430207     MOV.W   #0x0, &0x702
-     37          	ADC10CTL1 |= ADC10SHS_0; // ADC10SC bit
-   \   000060   924202070207 MOV.W   &0x702, &0x702
-     38          	ADC10CTL1 |= ADC10SHP; // SAMPCON signal sourced from sampling timer
-   \   000066   B2D000020207 BIS.W   #0x200, &0x702
-     39          	ADC10CTL1 &= ~ADC10ISSH; // The sample-input signal is not inverted.
-   \   00006C   B2C000010207 BIC.W   #0x100, &0x702
-     40          	ADC10CTL1 |= ADC10DIV_0; // ADC10_B clock divider – Divide by 1.
-   \   000072   924202070207 MOV.W   &0x702, &0x702
-     41          	ADC10CTL1 |= ADC10SSEL_0; // MODCLK
-   \   000078   924202070207 MOV.W   &0x702, &0x702
-     42          	ADC10CTL1 |= ADC10CONSEQ_0; // Single-channel, single-conversion
-   \   00007E   924202070207 MOV.W   &0x702, &0x702
-     43          	
-     44          	ADC10CTL2 = RESET_STATE; // Clear ADC10CTL2
-   \   000084   82430407     MOV.W   #0x0, &0x704
-     45          	ADC10CTL2 |= ADC10DIV_0; // Pre-divide by 1
-   \   000088   924204070407 MOV.W   &0x704, &0x704
-     46          	ADC10CTL2 |= ADC10RES; // 10-bit resolution
-   \   00008E   B2D010000407 BIS.W   #0x10, &0x704
-     47          	ADC10CTL2 &= ~ADC10DF; // Binary unsigned
-   \   000094   B2C20407     BIC.W   #0x8, &0x704
-     48          	ADC10CTL2 &= ~ADC10SR; // supports up to approximately 200 ksps
-   \   000098   A2C20407     BIC.W   #0x4, &0x704
-     49          	
-     50          	ADC10MCTL0 = RESET_STATE; // Clear ADC10MCTL0
-   \   00009C   82430A07     MOV.W   #0x0, &0x70a
-     51          	ADC10MCTL0 |= ADC10SREF_0; // V(R+) = AVCC and V(R-) = AVSS
-   \   0000A0   92420A070A07 MOV.W   &0x70a, &0x70a
-     52          	ADC10MCTL0 |= ADC10INCH_3; // Channel A3 Thumb Wheel
-   \   0000A6   B2D003000A07 BIS.W   #0x3, &0x70a
-     53          	ADC10IE |= ADC10IE0; // Enable ADC conversion complete interrupt
-   \   0000AC   92D31A07     BIS.W   #0x1, &0x71a
-     54          }
-   \   0000B0   1001         RETA
-   \   0000B2                REQUIRE _A_PBIFG_L
-   \   0000B2                REQUIRE _A_PBIE_L
-   \   0000B2                REQUIRE _A_PBIES_L
-   \   0000B2                REQUIRE TA0CTL
-   \   0000B2                REQUIRE TA0EX0
-   \   0000B2                REQUIRE TA0CCR0
-   \   0000B2                REQUIRE TA0CCTL0
-   \   0000B2                REQUIRE _A_ADC10CTL0_L
-   \   0000B2                REQUIRE _A_ADC10CTL1_L
-   \   0000B2                REQUIRE _A_ADC10CTL2_L
-   \   0000B2                REQUIRE _A_ADC10MCTL0_L
-   \   0000B2                REQUIRE _A_ADC10IE_L
+     25          	TA0EX0 = TAIDEX_7;
+   \   000038   B24007006003 MOV.W   #0x7, &0x360
+     26          	
+     27          	TA0CCR0 = TA0_ROLLOVER; //1ms
+   \   00003E   B240F4015203 MOV.W   #0x1f4, &0x352
+     28          	TA0CCTL0 |= CCIE;    
+   \   000044   B2D010004203 BIS.W   #0x10, &0x342
+     29          		
+     30          		
+     31          	//Init ADC
+     32          #define RESET_STATE (0); 
+     33          	ADC10CTL0 = RESET_STATE; // Clear ADC10CTL0
+   \   00004A   82430007     MOV.W   #0x0, &0x700
+     34          	ADC10CTL0 |= ADC10SHT_2; // 16 ADC clocks
+   \   00004E   B2D000020007 BIS.W   #0x200, &0x700
+     35          	ADC10CTL0 &= ~ADC10MSC; // Single Sequence
+   \   000054   B2C080000007 BIC.W   #0x80, &0x700
+     36          	ADC10CTL0 |= ADC10ON; // ADC ON - Core Enabled
+   \   00005A   B2D010000007 BIS.W   #0x10, &0x700
+     37          	
+     38          	ADC10CTL1 = RESET_STATE; // Clear ADC10CTL1
+   \   000060   82430207     MOV.W   #0x0, &0x702
+     39          	ADC10CTL1 |= ADC10SHS_0; // ADC10SC bit
+   \   000064   924202070207 MOV.W   &0x702, &0x702
+     40          	ADC10CTL1 |= ADC10SHP; // SAMPCON signal sourced from sampling timer
+   \   00006A   B2D000020207 BIS.W   #0x200, &0x702
+     41          	ADC10CTL1 &= ~ADC10ISSH; // The sample-input signal is not inverted.
+   \   000070   B2C000010207 BIC.W   #0x100, &0x702
+     42          	ADC10CTL1 |= ADC10DIV_0; // ADC10_B clock divider – Divide by 1.
+   \   000076   924202070207 MOV.W   &0x702, &0x702
+     43          	ADC10CTL1 |= ADC10SSEL_0; // MODCLK
+   \   00007C   924202070207 MOV.W   &0x702, &0x702
+     44          	ADC10CTL1 |= ADC10CONSEQ_0; // Single-channel, single-conversion
+   \   000082   924202070207 MOV.W   &0x702, &0x702
+     45          	
+     46          	ADC10CTL2 = RESET_STATE; // Clear ADC10CTL2
+   \   000088   82430407     MOV.W   #0x0, &0x704
+     47          	ADC10CTL2 |= ADC10DIV_0; // Pre-divide by 1
+   \   00008C   924204070407 MOV.W   &0x704, &0x704
+     48          	ADC10CTL2 |= ADC10RES; // 10-bit resolution
+   \   000092   B2D010000407 BIS.W   #0x10, &0x704
+     49          	ADC10CTL2 &= ~ADC10DF; // Binary unsigned
+   \   000098   B2C20407     BIC.W   #0x8, &0x704
+     50          	ADC10CTL2 &= ~ADC10SR; // supports up to approximately 200 ksps
+   \   00009C   A2C20407     BIC.W   #0x4, &0x704
+     51          	
+     52          	ADC10MCTL0 = RESET_STATE; // Clear ADC10MCTL0
+   \   0000A0   82430A07     MOV.W   #0x0, &0x70a
+     53          	ADC10MCTL0 |= ADC10SREF_0; // V(R+) = AVCC and V(R-) = AVSS
+   \   0000A4   92420A070A07 MOV.W   &0x70a, &0x70a
+     54          	ADC10MCTL0 |= ADC10INCH_3; // Channel A3 Thumb Wheel
+   \   0000AA   B2D003000A07 BIS.W   #0x3, &0x70a
+     55          	ADC10IE |= ADC10IE0; // Enable ADC conversion complete interrupt
+   \   0000B0   92D31A07     BIS.W   #0x1, &0x71a
+     56          }
+   \   0000B4   1001         RETA
+   \   0000B6                REQUIRE _A_PBIFG_L
+   \   0000B6                REQUIRE _A_PBIE_L
+   \   0000B6                REQUIRE _A_PBIES_L
+   \   0000B6                REQUIRE TA0CTL
+   \   0000B6                REQUIRE TA0EX0
+   \   0000B6                REQUIRE TA0CCR0
+   \   0000B6                REQUIRE TA0CCTL0
+   \   0000B6                REQUIRE _A_ADC10CTL0_L
+   \   0000B6                REQUIRE _A_ADC10CTL1_L
+   \   0000B6                REQUIRE _A_ADC10CTL2_L
+   \   0000B6                REQUIRE _A_ADC10MCTL0_L
+   \   0000B6                REQUIRE _A_ADC10IE_L
 
    \                                 In  segment DATA16_ID, align 2, align-sorted
    \                     `?<Initializer for sw1Debounce>`:
@@ -216,17 +219,18 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\interrupts.c
    \                                 In  segment DATA16_ID, align 2, align-sorted
    \                     `?<Initializer for sw2Debounce>`:
    \   000000   FFFF         DC16 -1
-     55          
-     56          
      57          
      58          
      59          
+     60          
+     61          
 
    Maximum stack usage in bytes:
 
    CSTACK Function
    ------ --------
       4   Init_Interrupts
+        4   -> Serial_Init
 
 
    Segment part sizes:
@@ -235,7 +239,7 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\interrupts.c
    -----  --------------
        2  ?<Initializer for sw1Debounce>
        2  ?<Initializer for sw2Debounce>
-     178  Init_Interrupts
+     182  Init_Interrupts
        2  TA0CCR0
        2  TA0CCTL0
        2  TA0CTL
@@ -252,12 +256,12 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\interrupts.c
        2  sw2Debounce
 
  
- 178 bytes in segment CODE
+ 182 bytes in segment CODE
   24 bytes in segment DATA16_AN
    4 bytes in segment DATA16_I
    4 bytes in segment DATA16_ID
  
- 178 bytes of CODE  memory
+ 182 bytes of CODE  memory
    4 bytes of CONST memory
    4 bytes of DATA  memory (+ 24 bytes shared)
 

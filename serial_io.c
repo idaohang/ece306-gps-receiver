@@ -79,7 +79,7 @@ void Serial_Init(void)
 void writeUsb(char c)
 {
 	UsbTx[usbTx_W++] = c;
-	UCA0IE |= UCTXIE;
+        UCA0TXBUF = c;
 }
 
 char readUsb(void)
@@ -93,7 +93,7 @@ char readUsb(void)
 void writeSerial(char c)
 {
 	SerialTx[serialTx_W++] = c;
-	UCA1IE |= UCTXIE;
+        UCA1TXBUF = c;
 }
 
 char readSerial(void)

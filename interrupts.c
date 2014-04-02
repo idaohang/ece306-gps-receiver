@@ -7,6 +7,8 @@ volatile int sw1Debounce = DISABLE_DEBOUNCE, sw2Debounce = DISABLE_DEBOUNCE;
 
 void Init_Interrupts(void)
 {
+	Serial_Init();
+	
 	P4IFG &= ~SW1;
 	P4IFG &= ~SW2;
 	P4IE |= SW1;

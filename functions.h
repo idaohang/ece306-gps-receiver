@@ -101,6 +101,7 @@ void figureEight(void);
 void triangle(void);
 
 //Serial IO Prototypes
+void Serial_Init(void);
 void ResetBuffer(char*);
 void Comm_Process(void);
 char readUsb(void);

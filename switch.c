@@ -19,7 +19,7 @@ __interrupt void Port_4(void)
 {
 	if(P4IFG & SW1)
 	{
-		//P4IFG &= ~SW1;
+		P4IFG &= ~SW1;
 		
 		if(DebounceTimer == 0)
 		{
@@ -30,7 +30,7 @@ __interrupt void Port_4(void)
 			
 	if(P4IFG & SW2)
 	{
-		//P4IFG &= ~SW2;
+		P4IFG &= ~SW2;
 		
 		if(DebounceTimer == 0)
 		{

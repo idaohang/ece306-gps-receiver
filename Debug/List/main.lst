@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       01/Apr/2014  22:39:05 #
+# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       01/Apr/2014  23:54:15 #
 # Copyright 1996-2013 IAR Systems AB.                                         #
 #                                                                             #
 #    __rt_version  =  3                                                       #
@@ -107,54 +107,56 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\main.c
    \   000014   ........     CALLA   #Init_Timers
      46          	Init_LCD();				// Initialize LCD     
    \   000018   ........     CALLA   #Init_LCD
-     47                  
+     47          	init_gps();
+   \   00001C   ........     CALLA   #init_gps
      48                  
      49                  
-     50          	//          "0123456789abcdef"
-     51          	display_1 = "   Project  7   ";
-   \   00001C   B240........ MOV.W   #`?<Constant "   Project  7   ">`, &display_1
-     52          	display_2 = "                ";
-   \   000022   B240........ MOV.W   #`?<Constant "                ">`, &display_2
-     53          	Display_Process();
-   \   000028   ........     CALLA   #Display_Process
-   \   00002C   1A3C         JMP     ??main_2
-     54          	
-     55          /* ---------- Begining of the "While" Operating System ------------- */
-     56          	while(ALWAYS) 										// Can the Operating system run
-     57          	{                            
-     58          		for(int i = 0; i < DISPLAY_SIZE; i++)
-     59          		{
-     60          			display_1[i] = SerialRx[i];
+     50                  
+     51          	//          "0123456789abcdef"
+     52          	display_1 = "   Project  7   ";
+   \   000020   B240........ MOV.W   #`?<Constant "   Project  7   ">`, &display_1
+     53          	display_2 = "                ";
+   \   000026   B240........ MOV.W   #`?<Constant "                ">`, &display_2
+     54          	Display_Process();
+   \   00002C   ........     CALLA   #Display_Process
+   \   000030   1A3C         JMP     ??main_2
+     55          	
+     56          /* ---------- Begining of the "While" Operating System ------------- */
+     57          	while(ALWAYS) 										// Can the Operating system run
+     58          	{                            
+     59          		for(int i = 0; i < DISPLAY_SIZE; i++)
+     60          		{
+     61          			display_1[i] = SerialRx[i];
    \                     ??main_0:
-   \   00002E   1E42....     MOV.W   &display_1, R14
-   \   000032   0E5F         ADD.W   R15, R14
-   \   000034   DE4F....0000 MOV.B   SerialRx(R15), 0(R14)
-     61          			display_2[i] = SerialRx[i+16];
-   \   00003A   1E42....     MOV.W   &display_2, R14
-   \   00003E   0E5F         ADD.W   R15, R14
-   \   000040   DE4F....0000 MOV.B   SerialRx + 16(R15), 0(R14)
-     62          		}
-   \   000046   1F53         ADD.W   #0x1, R15
+   \   000032   1E42....     MOV.W   &display_1, R14
+   \   000036   0E5F         ADD.W   R15, R14
+   \   000038   DE4F....0000 MOV.B   SerialRx(R15), 0(R14)
+     62          			display_2[i] = SerialRx[i+16];
+   \   00003E   1E42....     MOV.W   &display_2, R14
+   \   000042   0E5F         ADD.W   R15, R14
+   \   000044   DE4F....0000 MOV.B   SerialRx + 16(R15), 0(R14)
+     63          		}
+   \   00004A   1F53         ADD.W   #0x1, R15
    \                     ??main_1:
-   \   000048   3F901000     CMP.W   #0x10, R15
-   \   00004C   F03B         JL      ??main_0
-     63          		
-     64          		if(TimeMsec % EVERY_50 == RESET_TIME)		
-   \   00004E   1C42....     MOV.W   &TimeMsec, R12
-   \   000052   3E403200     MOV.W   #0x32, R14
-   \   000056   ........     CALLA   #?DivMod16u
-   \   00005A   0E93         CMP.W   #0x0, R14
-   \   00005C   0220         JNE     ??main_2
-     65          			Display_Process();
-   \   00005E   ........     CALLA   #Display_Process
+   \   00004C   3F901000     CMP.W   #0x10, R15
+   \   000050   F03B         JL      ??main_0
+     64          		
+     65          		if(TimeMsec % EVERY_50 == RESET_TIME)		
+   \   000052   1C42....     MOV.W   &TimeMsec, R12
+   \   000056   3E403200     MOV.W   #0x32, R14
+   \   00005A   ........     CALLA   #?DivMod16u
+   \   00005E   0E93         CMP.W   #0x0, R14
+   \   000060   0220         JNE     ??main_2
+     66          			Display_Process();
+   \   000062   ........     CALLA   #Display_Process
    \                     ??main_2:
-   \   000062   0F43         MOV.W   #0x0, R15
-   \   000064   F13F         JMP     ??main_1
-   \   000066   0343         NOP
-     66                          
-     67          		
-     68          	}
-     69          }
+   \   000066   0F43         MOV.W   #0x0, R15
+   \   000068   F13F         JMP     ??main_1
+   \   00006A   0343         NOP
+     67                          
+     68          		
+     69          	}
+     70          }
 
    \                                 In  segment DATA16_C, align 1, align-sorted
    \                     `?<Constant "   Project  7   ">`:
@@ -167,7 +169,7 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\main.c
    \   000000   202020202020 DC8 "                "
    \            202020202020
    \            2020202000  
-     70          
+     71          
 
    Maximum stack usage in bytes:
 
@@ -181,6 +183,7 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\main.c
         4   -> Init_LCD
         4   -> Init_Ports
         4   -> Init_Timers
+        4   -> init_gps
 
 
    Segment part sizes:
@@ -192,15 +195,15 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\main.c
        2  Time_Sequence
        3  control_state
        1  led_smclk
-     104  main
+     108  main
        1  one_time
 
  
- 104 bytes in segment CODE
+ 108 bytes in segment CODE
   34 bytes in segment DATA16_C
    7 bytes in segment DATA16_Z
  
- 104 bytes of CODE  memory
+ 108 bytes of CODE  memory
   34 bytes of CONST memory
    7 bytes of DATA  memory
 

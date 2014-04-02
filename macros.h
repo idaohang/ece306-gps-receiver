@@ -2,7 +2,7 @@
 // Main Macros
 
 #define ALWAYS                  (1) // Is always 1
-#define LED1                 (0x01) // LED 1
+//#define LED1                 (0x01) // LED 1
 #define BLINK_LED            (0x01) // Allow LED to Blink
 #define CNTL_STATE_INDEX        (3) // Control States
 #define LCD_LINE_1           (0x80) // Position Cursor at Character 01 of Line 1

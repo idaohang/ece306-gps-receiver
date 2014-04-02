@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       01/Apr/2014  22:39:06 #
+# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       02/Apr/2014  00:43:21 #
 # Copyright 1996-2013 IAR Systems AB.                                         #
 #                                                                             #
 #    __rt_version  =  3                                                       #
@@ -32,14 +32,87 @@
 
 C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\gps.c
       1          #include "msp430.h"
+
+   \                                 In  segment DATA16_AN, at 0x320
+   \   union <unnamed> _A_PJIN_L
+   \                     _A_PJIN_L:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_AN, at 0x322
+   \   union <unnamed> _A_PJOUT_L
+   \                     _A_PJOUT_L:
+   \   000000                DS8 2
       2          #include "macros.h"
       3          #include "functions.h"
+      4          
 
+   \                                 In  segment CODE, align 2
+      5          void init_gps(void)
+   \                     init_gps:
+      6          {
+      7              PJOUT |= GPS_RESET | GPS_PWR;
+   \   000000   B2D003002203 BIS.W   #0x3, &0x322
+      8              waitMsec(5000);  
+   \   000006   3C408813     MOV.W   #0x1388, R12
+   \   00000A   ........     CALLA   #waitMsec
+      9              PJOUT &= ~GPS_RESET;
+   \   00000E   A2C32203     BIC.W   #0x2, &0x322
+     10              waitMsec(1000);
+   \   000012   3C40E803     MOV.W   #0x3e8, R12
+   \   000016   ........     CALLA   #waitMsec
+   \   00001A   0C3C         JMP     ??init_gps_1
+     11              //PJOUT |= GPS_PWRCNTL;
+     12              
+     13          
+     14              while(!(PJIN & GPS_PWRCHK))
+     15              {
+     16                PJOUT |= GPS_PWRCNTL;
+   \                     ??init_gps_0:
+   \   00001C   A2D22203     BIS.W   #0x4, &0x322
+     17                waitMsec(500);
+   \   000020   3C40F401     MOV.W   #0x1f4, R12
+   \   000024   ........     CALLA   #waitMsec
+     18                PJOUT &= ~GPS_PWRCNTL;
+   \   000028   A2C22203     BIC.W   #0x4, &0x322
+     19                waitMsec(2000);
+   \   00002C   3C40D007     MOV.W   #0x7d0, R12
+   \   000030   ........     CALLA   #waitMsec
+     20              }
+   \                     ??init_gps_1:
+   \   000034   B2B22003     BIT.W   #0x8, &0x320
+   \   000038   F12B         JNC     ??init_gps_0
+     21                //Wait for it to transition to high
+     22              //Once PWRCHK is high, release GPS_PWRCNTL
+     23              //By setting to low.
+     24              //waitMsec(5000);
+     25              //PJOUT &= ~GPS_PWRCNTL;
+     26          }
+   \   00003A   1001         RETA
+   \   00003C                REQUIRE _A_PJOUT_L
+   \   00003C                REQUIRE _A_PJIN_L
+
+   Maximum stack usage in bytes:
+
+   CSTACK Function
+   ------ --------
+      4   init_gps
+        4   -> waitMsec
+
+
+   Segment part sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       2  _A_PJIN_L
+       2  _A_PJOUT_L
+      60  init_gps
 
  
-
+ 60 bytes in segment CODE
+  4 bytes in segment DATA16_AN
  
-
+ 60 bytes of CODE memory
+  0 bytes of DATA memory (+ 4 bytes shared)
 
 Errors: none
 Warnings: none

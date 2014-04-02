@@ -26,6 +26,8 @@ volatile extern char Last_SW2_State;
 
 //Function Prototypes ---------------------------
 
+void init_gps(void);
+
 // Function prototypes for precompiled
 __interrupt void Timer2_B0_ISR(void);
  __interrupt void TIMER2_B1_ISR(void);

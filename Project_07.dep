@@ -2,7 +2,7 @@
 
 <project>
   <fileVersion>2</fileVersion>
-  <fileChecksum>2907126689</fileChecksum>
+  <fileChecksum>4247512400</fileChecksum>
   <configuration>
     <name>Debug</name>
     <outputs>
@@ -70,6 +70,10 @@
       <file>$PROJ_DIR$\Debug\List\switch.lst</file>
       <file>$PROJ_DIR$\Debug\List\serial_io.lst</file>
       <file>$PROJ_DIR$\Debug\List\timers.lst</file>
+      <file>$PROJ_DIR$\Debug\List\gps.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\gps.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\gps.r43</file>
+      <file>$PROJ_DIR$\gps.c</file>
     </outputs>
     <file>
       <name>[ROOT_NODE]</name>
@@ -353,7 +357,30 @@
       <inputs>
         <tool>
           <name>XLINK</name>
-          <file> 44 43 58 23 22 24 21 19 20 17 53 15 25 27 26 5 33</file>
+          <file> 44 43 58 23 66 22 24 21 19 20 17 53 15 25 27 26 5 33</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\gps.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 64 66</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 65</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 51 48 46 47 59 45</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 51 48 46 47 59 45</file>
         </tool>
       </inputs>
     </file>

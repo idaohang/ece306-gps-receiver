@@ -40,13 +40,10 @@ void main(void)
 	Init_Clocks();                            // Initialize Clock System 
 	Init_Conditions();
 	Init_Interrupts();
-       
-	//PJOUT |= LED1;                          // Turn LED 1 on to indicate boot
 	  
 	TimeMsec = RESET_TIME;
 	Init_Timers(); 				// Initialize Timers
-	Init_LCD();				// Initialize LCD
-	//Init_LEDs();                            // Initialize LEDs       
+	Init_LCD();				// Initialize LCD     
         
         
         
@@ -55,12 +52,15 @@ void main(void)
 	display_2 = "                ";
 	Display_Process();
 	
-	//P1OUT |= IR_LED;
-        //waitMsec(10);
-	
 /* ---------- Begining of the "While" Operating System ------------- */
 	while(ALWAYS) 										// Can the Operating system run
 	{                            
+		for(int i = 0; i < DISPLAY_SIZE; i++)
+		{
+			display_1[i] = SerialRx[i];
+			display_2[i] = SerialRx[i+16];
+		}
+		
 		if(TimeMsec % EVERY_50 == RESET_TIME)		
 			Display_Process();
                 

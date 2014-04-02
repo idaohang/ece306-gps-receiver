@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       01/Apr/2014  22:25:07 #
+# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       01/Apr/2014  22:39:05 #
 # Copyright 1996-2013 IAR Systems AB.                                         #
 #                                                                             #
 #    __rt_version  =  3                                                       #
@@ -100,44 +100,57 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\main.c
    \   000008   ........     CALLA   #Init_Conditions
      42          	Init_Interrupts();
    \   00000C   ........     CALLA   #Init_Interrupts
-     43                 
-     44          	//PJOUT |= LED1;                          // Turn LED 1 on to indicate boot
-     45          	  
-     46          	TimeMsec = RESET_TIME;
+     43          	  
+     44          	TimeMsec = RESET_TIME;
    \   000010   8243....     MOV.W   #0x0, &TimeMsec
-     47          	Init_Timers(); 				// Initialize Timers
+     45          	Init_Timers(); 				// Initialize Timers
    \   000014   ........     CALLA   #Init_Timers
-     48          	Init_LCD();				// Initialize LCD
+     46          	Init_LCD();				// Initialize LCD     
    \   000018   ........     CALLA   #Init_LCD
-     49          	//Init_LEDs();                            // Initialize LEDs       
-     50                  
-     51                  
-     52                  
-     53          	//          "0123456789abcdef"
-     54          	display_1 = "   Project  7   ";
+     47                  
+     48                  
+     49                  
+     50          	//          "0123456789abcdef"
+     51          	display_1 = "   Project  7   ";
    \   00001C   B240........ MOV.W   #`?<Constant "   Project  7   ">`, &display_1
-     55          	display_2 = "                ";
+     52          	display_2 = "                ";
    \   000022   B240........ MOV.W   #`?<Constant "                ">`, &display_2
-     56          	Display_Process();
+     53          	Display_Process();
    \   000028   ........     CALLA   #Display_Process
-     57          	
-     58          	//P1OUT |= IR_LED;
-     59                  //waitMsec(10);
-     60          	
-     61          /* ---------- Begining of the "While" Operating System ------------- */
-     62          	while(ALWAYS) 										// Can the Operating system run
-     63          	{                            
-     64          		if(TimeMsec % EVERY_50 == RESET_TIME)		
+   \   00002C   1A3C         JMP     ??main_2
+     54          	
+     55          /* ---------- Begining of the "While" Operating System ------------- */
+     56          	while(ALWAYS) 										// Can the Operating system run
+     57          	{                            
+     58          		for(int i = 0; i < DISPLAY_SIZE; i++)
+     59          		{
+     60          			display_1[i] = SerialRx[i];
    \                     ??main_0:
-   \   00002C   1C42....     MOV.W   &TimeMsec, R12
-   \   000030   3E403200     MOV.W   #0x32, R14
-   \   000034   ........     CALLA   #?DivMod16u
-   \   000038   0E93         CMP.W   #0x0, R14
-   \   00003A   F823         JNE     ??main_0
+   \   00002E   1E42....     MOV.W   &display_1, R14
+   \   000032   0E5F         ADD.W   R15, R14
+   \   000034   DE4F....0000 MOV.B   SerialRx(R15), 0(R14)
+     61          			display_2[i] = SerialRx[i+16];
+   \   00003A   1E42....     MOV.W   &display_2, R14
+   \   00003E   0E5F         ADD.W   R15, R14
+   \   000040   DE4F....0000 MOV.B   SerialRx + 16(R15), 0(R14)
+     62          		}
+   \   000046   1F53         ADD.W   #0x1, R15
+   \                     ??main_1:
+   \   000048   3F901000     CMP.W   #0x10, R15
+   \   00004C   F03B         JL      ??main_0
+     63          		
+     64          		if(TimeMsec % EVERY_50 == RESET_TIME)		
+   \   00004E   1C42....     MOV.W   &TimeMsec, R12
+   \   000052   3E403200     MOV.W   #0x32, R14
+   \   000056   ........     CALLA   #?DivMod16u
+   \   00005A   0E93         CMP.W   #0x0, R14
+   \   00005C   0220         JNE     ??main_2
      65          			Display_Process();
-   \   00003C   ........     CALLA   #Display_Process
-   \   000040   F53F         JMP     ??main_0
-   \   000042   0343         NOP
+   \   00005E   ........     CALLA   #Display_Process
+   \                     ??main_2:
+   \   000062   0F43         MOV.W   #0x0, R15
+   \   000064   F13F         JMP     ??main_1
+   \   000066   0343         NOP
      66                          
      67          		
      68          	}
@@ -179,17 +192,17 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\main.c
        2  Time_Sequence
        3  control_state
        1  led_smclk
-      68  main
+     104  main
        1  one_time
 
  
- 68 bytes in segment CODE
- 34 bytes in segment DATA16_C
-  7 bytes in segment DATA16_Z
+ 104 bytes in segment CODE
+  34 bytes in segment DATA16_C
+   7 bytes in segment DATA16_Z
  
- 68 bytes of CODE  memory
- 34 bytes of CONST memory
-  7 bytes of DATA  memory
+ 104 bytes of CODE  memory
+  34 bytes of CONST memory
+   7 bytes of DATA  memory
 
 Errors: none
 Warnings: none

@@ -2,7 +2,7 @@
 
 <project>
   <fileVersion>2</fileVersion>
-  <fileChecksum>3000528964</fileChecksum>
+  <fileChecksum>2907126689</fileChecksum>
   <configuration>
     <name>Debug</name>
     <outputs>
@@ -60,6 +60,17 @@
       <file>$PROJ_DIR$\Debug\List\main.lst</file>
       <file>$PROJ_DIR$\macros.h</file>
       <file>$PROJ_DIR$\Debug\List\LED.lst</file>
+      <file>$PROJ_DIR$\prgm_control.c</file>
+      <file>$PROJ_DIR$\adc.c</file>
+      <file>$PROJ_DIR$\Debug\Obj\prgm_control.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\prgm_control.r43</file>
+      <file>$PROJ_DIR$\Debug\Obj\adc.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\adc.r43</file>
+      <file>$PROJ_DIR$\Debug\List\prgm_control.lst</file>
+      <file>$PROJ_DIR$\Debug\List\adc.lst</file>
+      <file>$PROJ_DIR$\Debug\List\switch.lst</file>
+      <file>$PROJ_DIR$\Debug\List\serial_io.lst</file>
+      <file>$PROJ_DIR$\Debug\List\timers.lst</file>
     </outputs>
     <file>
       <name>[ROOT_NODE]</name>
@@ -102,7 +113,7 @@
       <outputs>
         <tool>
           <name>ICC430</name>
-          <file> 14</file>
+          <file> 63 14</file>
         </tool>
         <tool>
           <name>BICOMP</name>
@@ -110,6 +121,10 @@
         </tool>
       </outputs>
       <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 44 52 47 49 45 48</file>
+        </tool>
         <tool>
           <name>BICOMP</name>
           <file> 44 52 47 49 45 48</file>
@@ -173,7 +188,7 @@
       <outputs>
         <tool>
           <name>ICC430</name>
-          <file> 53 21</file>
+          <file> 53</file>
         </tool>
         <tool>
           <name>BICOMP</name>
@@ -228,7 +243,7 @@
       <outputs>
         <tool>
           <name>ICC430</name>
-          <file> 24</file>
+          <file> 62 24</file>
         </tool>
         <tool>
           <name>BICOMP</name>
@@ -236,6 +251,10 @@
         </tool>
       </outputs>
       <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 44 52 47 49 45 48</file>
+        </tool>
         <tool>
           <name>BICOMP</name>
           <file> 44 52 47 49 45 48</file>
@@ -260,13 +279,23 @@
       <outputs>
         <tool>
           <name>ICC430</name>
-          <file> 25</file>
+          <file> 64 25</file>
         </tool>
         <tool>
           <name>BICOMP</name>
           <file> 40</file>
         </tool>
       </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 44 52 47 49 45 48</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 44 52 47 49 45 48</file>
+        </tool>
+      </inputs>
     </file>
     <file>
       <name>$PROJ_DIR$\Debug\Exe\Project_07.d43</name>
@@ -279,7 +308,53 @@
       <inputs>
         <tool>
           <name>XLINK</name>
-          <file> 42 43 18 15 23 19 21 22 20 16 14 24 26 25 8 29</file>
+          <file> 42 43 59 18 15 23 19 22 20 16 57 14 24 26 25 8 29</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\prgm_control.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 60 57</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 56</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 47 49 45 48 44 52</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 47 49 45 48 44 52</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\adc.c</name>
+      <outputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 61 59</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 58</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 47 49 45 48 44 52</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 47 49 45 48 44 52</file>
         </tool>
       </inputs>
     </file>

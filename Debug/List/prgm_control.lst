@@ -1,0 +1,408 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       01/Apr/2014  21:39:32 #
+# Copyright 1996-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    __rt_version  =  3                                                       #
+#    __double_size =  32                                                      #
+#    __reg_r4      =  free                                                    #
+#    __reg_r5      =  free                                                    #
+#    __pic         =  no                                                      #
+#    __core        =  430X                                                    #
+#    __data_model  =  small                                                   #
+#    Source file   =  C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\pr #
+#                     gm_control.c                                            #
+#    Command line  =  C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\pr #
+#                     gm_control.c -lC C:\Users\Nathan\Documents\GitHub\ece30 #
+#                     6-gps-receiver\Debug\List\ -o                           #
+#                     C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\De #
+#                     bug\Obj\ --no_cse --no_unroll --no_inline               #
+#                     --no_code_motion --no_tbaa --debug -D__MSP430FR5739__   #
+#                     -e --double=32 --dlib_config "C:\Program Files          #
+#                     (x86)\IAR Systems\Embedded Workbench                    #
+#                     6.5\430\LIB\DLIB\dl430xsfn.h" --core=430X               #
+#                     --data_model=small -Ol --multiplier=32                  #
+#                     --multiplier_location=4C0 --hw_workaround=CPU40         #
+#    List file     =  C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\De #
+#                     bug\List\prgm_control.lst                               #
+#    Object file   =  C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\De #
+#                     bug\Obj\prgm_control.r43                                #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\prgm_control.c
+      1          #include  "msp430.h"
+      2          #include  "functions.h"
+      3          #include  "macros.h"
+      4          
+      5          
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+      6          volatile int LeftMotorPower = 0;
+   \                     LeftMotorPower:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+      7          volatile int RightMotorPower = 0;
+   \                     RightMotorPower:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_Z, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+      8          int ProgramState = 0;
+   \                     ProgramState:
+   \   000000                DS8 2
+
+   \                                 In  segment DATA16_I, align 2, align-sorted
+   \   000000                REQUIRE ?cstart_init_copy
+      9          int OldState = -1;
+   \                     OldState:
+   \   000000                DS8 2
+   \   000002                REQUIRE `?<Initializer for OldState>`
+     10          
+
+   \                                 In  segment DATA16_I, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_copy
+     11          char IsLight = 1;
+   \                     IsLight:
+   \   000000                DS8 1
+   \   000001                REQUIRE `?<Initializer for IsLight>`
+
+   \                                 In  segment DATA16_I, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_copy
+     12          char WasLight = 1;
+   \                     WasLight:
+   \   000000                DS8 1
+   \   000001                REQUIRE `?<Initializer for WasLight>`
+     13          
+
+   \                                 In  segment CODE, align 2
+     14          void Control_Process(void)
+   \                     Control_Process:
+     15          {
+     16          	IsLight = (ADC_LeftIR + ADC_RightIR)/2 < ADC_Thumb;
+                 	^
+Warning[Pa082]: undefined behavior: the order of volatile accesses is
+          undefined in this statement
+   \   000000   1C42....     MOV.W   &ADC_LeftIR, R12
+   \   000004   1C52....     ADD.W   &ADC_RightIR, R12
+   \   000008   2E43         MOV.W   #0x2, R14
+   \   00000A   ........     CALLA   #?DivMod16s
+   \   00000E   1C92....     CMP.W   &ADC_Thumb, R12
+   \   000012   0234         JGE     ??Control_Process_0
+   \   000014   5E43         MOV.B   #0x1, R14
+   \   000016   013C         JMP     ??Control_Process_1
+   \                     ??Control_Process_0:
+   \   000018   4E43         MOV.B   #0x0, R14
+   \                     ??Control_Process_1:
+   \   00001A   C24E....     MOV.B   R14, &IsLight
+     17                  
+     18                  if(!IsLight)
+   \   00001E   C293....     CMP.B   #0x0, &IsLight
+   \   000022   1020         JNE     ??Control_Process_2
+     19          	{
+     20          		//          "0123456789abcdef"
+     21          		display_2 = "       Dark     ";
+   \   000024   B240........ MOV.W   #`?<Constant "       Dark     ">`, &display_2
+     22                          
+     23                          if(WasLight && (ProgramState == 1 || ProgramState == 3))
+   \   00002A   C293....     CMP.B   #0x0, &WasLight
+   \   00002E   0D24         JEQ     ??Control_Process_3
+   \   000030   9293....     CMP.W   #0x1, &ProgramState
+   \   000034   0424         JEQ     ??Control_Process_4
+   \   000036   B2900300.... CMP.W   #0x3, &ProgramState
+   \   00003C   0620         JNE     ??Control_Process_3
+     24                            ProgramState++;
+   \                     ??Control_Process_4:
+   \   00003E   9253....     ADD.W   #0x1, &ProgramState
+   \   000042   033C         JMP     ??Control_Process_3
+     25          	}
+     26          	else
+     27                  {
+     28          		display_2 = "       Light    ";
+   \                     ??Control_Process_2:
+   \   000044   B240........ MOV.W   #`?<Constant "       Light    ">`, &display_2
+     29                  }
+     30                  
+     31                  if((ProgramState != 1 && ProgramState != 3) && MotorTimer <= 0)
+   \                     ??Control_Process_3:
+   \   00004A   9293....     CMP.W   #0x1, &ProgramState
+   \   00004E   0924         JEQ     ??Control_Process_5
+   \   000050   B2900300.... CMP.W   #0x3, &ProgramState
+   \   000056   0524         JEQ     ??Control_Process_5
+   \   000058   8293....     CMP.W   #0x0, &MotorTimer
+   \   00005C   0220         JNE     ??Control_Process_5
+     32                    ProgramState++;
+   \   00005E   9253....     ADD.W   #0x1, &ProgramState
+     33                  
+     34                  if(OldState != ProgramState)
+   \                     ??Control_Process_5:
+   \   000062   9292........ CMP.W   &ProgramState, &OldState
+   \   000068   8824         JEQ     ??Control_Process_6
+     35                    switch(ProgramState)
+   \   00006A   1F42....     MOV.W   &ProgramState, R15
+   \   00006E   1F83         SUB.W   #0x1, R15
+   \   000070   0B24         JEQ     ??Control_Process_7
+   \   000072   1F83         SUB.W   #0x1, R15
+   \   000074   1C24         JEQ     ??Control_Process_8
+   \   000076   1F83         SUB.W   #0x1, R15
+   \   000078   2D24         JEQ     ??Control_Process_9
+   \   00007A   1F83         SUB.W   #0x1, R15
+   \   00007C   3A24         JEQ     ??Control_Process_10
+   \   00007E   1F83         SUB.W   #0x1, R15
+   \   000080   4F24         JEQ     ??Control_Process_11
+   \   000082   1F83         SUB.W   #0x1, R15
+   \   000084   6024         JEQ     ??Control_Process_12
+   \   000086   723C         JMP     ??Control_Process_13
+     36                    {
+     37                      case 1: 
+     38                        allStop();
+   \                     ??Control_Process_7:
+   \   000088   ........     CALLA   #allStop
+     39                        waitMsec(500);
+   \   00008C   3C40F401     MOV.W   #0x1f4, R12
+   \   000090   ........     CALLA   #waitMsec
+     40                        MotorTimer = 10000;
+   \   000094   B2401027.... MOV.W   #0x2710, &MotorTimer
+     41                        LeftMotorPower = LPOWER;
+   \   00009A   B2406400.... MOV.W   #0x64, &LeftMotorPower
+     42                        RightMotorPower = RPOWER;
+   \   0000A0   B2405F00.... MOV.W   #0x5f, &RightMotorPower
+     43                        
+     44                        //          "0123456789abcdef"
+     45                        display_1 = "Forward to Line ";
+   \   0000A6   B240........ MOV.W   #`?<Constant "Forward to Line ">`, &display_1
+     46                        break;
+   \   0000AC   663C         JMP     ??Control_Process_6
+     47                      case 2:
+     48                        allStop();
+   \                     ??Control_Process_8:
+   \   0000AE   ........     CALLA   #allStop
+     49                        waitMsec(500);
+   \   0000B2   3C40F401     MOV.W   #0x1f4, R12
+   \   0000B6   ........     CALLA   #waitMsec
+     50                        LeftMotorPower = -LPOWER;
+   \   0000BA   B2409CFF.... MOV.W   #0xff9c, &LeftMotorPower
+     51                        RightMotorPower = -RPOWER;
+   \   0000C0   B240A1FF.... MOV.W   #0xffa1, &RightMotorPower
+     52                        MotorTimer = 1000;
+   \   0000C6   B240E803.... MOV.W   #0x3e8, &MotorTimer
+     53                        
+     54                        //          "0123456789abcdef"
+     55                        display_1 = " Blind Reverse  ";
+   \   0000CC   B240........ MOV.W   #`?<Constant " Blind Reverse  ">`, &display_1
+     56                        break;
+   \   0000D2   533C         JMP     ??Control_Process_6
+     57                      case 3:
+     58                        allStop();
+   \                     ??Control_Process_9:
+   \   0000D4   ........     CALLA   #allStop
+     59                        MotorTimer = 10000;
+   \   0000D8   B2401027.... MOV.W   #0x2710, &MotorTimer
+     60                        LeftMotorPower = -LPOWER;
+   \   0000DE   B2409CFF.... MOV.W   #0xff9c, &LeftMotorPower
+     61                        RightMotorPower = -RPOWER;
+   \   0000E4   B240A1FF.... MOV.W   #0xffa1, &RightMotorPower
+     62                        
+     63                        //          "0123456789abcdef"
+     64                        display_1 = "Reverse to Line ";
+   \   0000EA   B240........ MOV.W   #`?<Constant "Reverse to Line ">`, &display_1
+     65                        break;
+   \   0000F0   443C         JMP     ??Control_Process_6
+     66                      case 4: 
+     67                        allStop();
+   \                     ??Control_Process_10:
+   \   0000F2   ........     CALLA   #allStop
+     68                        //waitMsec(250);
+     69                        MotorTimer = (10000 - MotorTimer + 4000)/2;
+   \   0000F6   3F40B036     MOV.W   #0x36b0, R15
+   \   0000FA   1F82....     SUB.W   &MotorTimer, R15
+   \   0000FE   5F03         RRUM.W  #0x1, R15
+   \   000100   824F....     MOV.W   R15, &MotorTimer
+     70                        waitMsec(500);
+   \   000104   3C40F401     MOV.W   #0x1f4, R12
+   \   000108   ........     CALLA   #waitMsec
+     71                        LeftMotorPower = LPOWER-10;
+   \   00010C   B2405A00.... MOV.W   #0x5a, &LeftMotorPower
+     72                        RightMotorPower = RPOWER;
+   \   000112   B2405F00.... MOV.W   #0x5f, &RightMotorPower
+     73                        
+     74                        //          "0123456789abcdef"
+     75                        display_1 = "Forward to Mid  ";
+   \   000118   B240........ MOV.W   #`?<Constant "Forward to Mid  ">`, &display_1
+     76                        break;
+   \   00011E   2D3C         JMP     ??Control_Process_6
+     77                      case 5:
+     78                        allStop();
+   \                     ??Control_Process_11:
+   \   000120   ........     CALLA   #allStop
+     79                        waitMsec(500);
+   \   000124   3C40F401     MOV.W   #0x1f4, R12
+   \   000128   ........     CALLA   #waitMsec
+     80                        MotorTimer = SPIN_TIME*3;
+   \   00012C   B2403A20.... MOV.W   #0x203a, &MotorTimer
+     81                        LeftMotorPower = LPOWER;
+   \   000132   B2406400.... MOV.W   #0x64, &LeftMotorPower
+     82                        RightMotorPower = -RPOWER;
+   \   000138   B240A1FF.... MOV.W   #0xffa1, &RightMotorPower
+     83                        
+     84                        //          "0123456789abcdef"
+     85                        display_1 = "   Spin CW  3x  ";
+   \   00013E   B240........ MOV.W   #`?<Constant "   Spin CW  3x  ">`, &display_1
+     86                        break;
+   \   000144   1A3C         JMP     ??Control_Process_6
+     87                      case 6:
+     88                        allStop();
+   \                     ??Control_Process_12:
+   \   000146   ........     CALLA   #allStop
+     89                        waitMsec(500);
+   \   00014A   3C40F401     MOV.W   #0x1f4, R12
+   \   00014E   ........     CALLA   #waitMsec
+     90                        MotorTimer = SPIN_TIME*2;
+   \   000152   B2407C15.... MOV.W   #0x157c, &MotorTimer
+     91                        LeftMotorPower = -LPOWER;
+   \   000158   B2409CFF.... MOV.W   #0xff9c, &LeftMotorPower
+     92                        RightMotorPower = RPOWER;
+   \   00015E   B2405F00.... MOV.W   #0x5f, &RightMotorPower
+     93                        
+     94                        //          "0123456789abcdef"
+     95                        display_1 = "   Spin CCW  2x ";
+   \   000164   B240........ MOV.W   #`?<Constant "   Spin CCW  2x ">`, &display_1
+     96                        break;
+   \   00016A   073C         JMP     ??Control_Process_6
+     97                      default:
+     98                        allStop();
+   \                     ??Control_Process_13:
+   \   00016C   ........     CALLA   #allStop
+     99                        MotorTimer = 0;
+   \   000170   8243....     MOV.W   #0x0, &MotorTimer
+    100                        
+    101                        //          "0123456789abcdef"
+    102                        display_1 = "     Default    ";
+   \   000174   B240........ MOV.W   #`?<Constant "     Default    ">`, &display_1
+    103                        break;
+    104                    }
+    105                  
+    106                  WasLight = IsLight;
+   \                     ??Control_Process_6:
+   \   00017A   D242........ MOV.B   &IsLight, &WasLight
+    107                  OldState = ProgramState;
+   \   000180   9242........ MOV.W   &ProgramState, &OldState
+    108          }
+   \   000186   1001         RETA
+
+   \                                 In  segment DATA16_ID, align 2, align-sorted
+   \                     `?<Initializer for OldState>`:
+   \   000000   FFFF         DC16 -1
+
+   \                                 In  segment DATA16_ID, align 1, align-sorted
+   \                     `?<Initializer for IsLight>`:
+   \   000000   01           DC8 1
+
+   \                                 In  segment DATA16_ID, align 1, align-sorted
+   \                     `?<Initializer for WasLight>`:
+   \   000000   01           DC8 1
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "       Dark     ">`:
+   \   000000   202020202020 DC8 "       Dark     "
+   \            204461726B20
+   \            2020202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "       Light    ">`:
+   \   000000   202020202020 DC8 "       Light    "
+   \            204C69676874
+   \            2020202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "Forward to Line ">`:
+   \   000000   466F72776172 DC8 "Forward to Line "
+   \            6420746F204C
+   \            696E652000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant " Blind Reverse  ">`:
+   \   000000   20426C696E64 DC8 " Blind Reverse  "
+   \            205265766572
+   \            7365202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "Reverse to Line ">`:
+   \   000000   526576657273 DC8 "Reverse to Line "
+   \            6520746F204C
+   \            696E652000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "Forward to Mid  ">`:
+   \   000000   466F72776172 DC8 "Forward to Mid  "
+   \            6420746F204D
+   \            6964202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "   Spin CW  3x  ">`:
+   \   000000   202020537069 DC8 "   Spin CW  3x  "
+   \            6E2043572020
+   \            3378202000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "   Spin CCW  2x ">`:
+   \   000000   202020537069 DC8 "   Spin CCW  2x "
+   \            6E2043435720
+   \            2032782000  
+
+   \                                 In  segment DATA16_C, align 1, align-sorted
+   \                     `?<Constant "     Default    ">`:
+   \   000000   202020202044 DC8 "     Default    "
+   \            656661756C74
+   \            2020202000  
+
+   Maximum stack usage in bytes:
+
+   CSTACK Function
+   ------ --------
+      4   Control_Process
+        4   -> allStop
+        4   -> waitMsec
+
+
+   Segment part sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      17  ?<Constant "       Dark     ">
+      17  ?<Constant "       Light    ">
+      17  ?<Constant "     Default    ">
+      17  ?<Constant "   Spin CCW  2x ">
+      17  ?<Constant "   Spin CW  3x  ">
+      17  ?<Constant " Blind Reverse  ">
+      17  ?<Constant "Forward to Line ">
+      17  ?<Constant "Forward to Mid  ">
+      17  ?<Constant "Reverse to Line ">
+       1  ?<Initializer for IsLight>
+       2  ?<Initializer for OldState>
+       1  ?<Initializer for WasLight>
+     392  Control_Process
+       1  IsLight
+       2  LeftMotorPower
+       2  OldState
+       2  ProgramState
+       2  RightMotorPower
+       1  WasLight
+
+ 
+ 392 bytes in segment CODE
+ 153 bytes in segment DATA16_C
+   4 bytes in segment DATA16_I
+   4 bytes in segment DATA16_ID
+   6 bytes in segment DATA16_Z
+ 
+ 392 bytes of CODE  memory
+ 157 bytes of CONST memory
+  10 bytes of DATA  memory
+
+Errors: none
+Warnings: 1

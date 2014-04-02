@@ -14,6 +14,32 @@ Nathan Hansen, 7 Feb 2014, Built with IAR Embedded Workbench Version: 5.60.5
 #include  "macros.h"
 #include  "msp430.h"
 
+#pragma vector=PORT4_VECTOR
+__interrupt void Port_4(void)
+{
+	if(P4IFG & SW1)
+	{
+		//P4IFG &= ~SW1;
+		
+		if(DebounceTimer == 0)
+		{
+			writeUsb('Q');
+			DebounceTimer = 100;
+		}
+	}
+			
+	if(P4IFG & SW2)
+	{
+		//P4IFG &= ~SW2;
+		
+		if(DebounceTimer == 0)
+		{
+			writeSerial('Q');
+			DebounceTimer = 100;
+		}
+	}		
+}
+
 //Switches_Process
 //DESC: Detects switch toggle (press & release) by polling current states
 //and comparing to records of the past state. On switch toggle, motor forward outputs
@@ -27,19 +53,12 @@ void Switches_Process(void)
 	
 	if ( !Last_SW1_State && current_sw1_state )
 	{               
-		for(int i = 0; i < sizeof TxChars; i++)
-		{
-			UCA1TXBUF = TxChars[i];
-			waitMsec(10);
-                        //while(!(UCTXIFG & 0x0002));
-		}
+		
 	}
 	
 	if ( !Last_SW2_State && current_sw2_state ) 
 	{
-		          //"0123456789abcdef"   
-		for(int i = 0; i < 16; i++)
-                  RxChars[i] = ' ';
+
 	}
 	
 	Last_SW1_State = current_sw1_state;

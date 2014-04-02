@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       01/Apr/2014  21:03:25 #
+# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       01/Apr/2014  21:09:56 #
 # Copyright 1996-2013 IAR Systems AB.                                         #
 #                                                                             #
 #    __rt_version  =  3                                                       #
@@ -44,11 +44,6 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\LED.c
      11          #include  "functions.h"
      12          #include  "macros.h"
      13          #include  "msp430.h"
-
-   \                                 In  segment DATA16_AN, at 0x322
-   \   union <unnamed> _A_PJOUT_L
-   \                     _A_PJOUT_L:
-   \   000000                DS8 2
      14          
      15          //Init_LEDs
      16          //
@@ -56,48 +51,24 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\LED.c
      18          //on Port3 and half on PortJ
      19          //ARGS: None
      20          //RET: None
-
-   \                                 In  segment CODE, align 2
      21          void Init_LEDs(void)
-   \                     Init_LEDs:
      22          {
      23            PJOUT &= ~LED1;
-   \   000000   92C32203     BIC.W   #0x1, &0x322
      24            PJOUT &= ~LED2;
-   \   000004   A2C32203     BIC.W   #0x2, &0x322
+                             ^
+Error[Pe020]: identifier "LED2" is undefined
      25            PJOUT &= ~LED3;
-   \   000008   A2C22203     BIC.W   #0x4, &0x322
+                             ^
+Error[Pe020]: identifier "LED3" is undefined
      26            PJOUT &= ~LED4;
-   \   00000C   B2C22203     BIC.W   #0x8, &0x322
+                             ^
+Error[Pe020]: identifier "LED4" is undefined
      27            
      28            /*P3OUT &= ~LED5;
      29            P3OUT &= ~LED6;
      30            P3OUT &= ~LED7;
      31            P3OUT &= ~LED8;*/
      32          }
-   \   000010   1001         RETA
-   \   000012                REQUIRE _A_PJOUT_L
 
-   Maximum stack usage in bytes:
-
-   CSTACK Function
-   ------ --------
-      4   Init_LEDs
-
-
-   Segment part sizes:
-
-   Bytes  Function/Label
-   -----  --------------
-      18  Init_LEDs
-       2  _A_PJOUT_L
-
- 
- 18 bytes in segment CODE
-  2 bytes in segment DATA16_AN
- 
- 18 bytes of CODE memory
-  0 bytes of DATA memory (+ 2 bytes shared)
-
-Errors: none
+Errors: 3
 Warnings: none

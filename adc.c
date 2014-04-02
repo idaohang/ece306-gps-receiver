@@ -62,7 +62,7 @@ __interrupt void ADC10_ISR(void)
 
 void ADC_Process(void)
 {
-        P1OUT |= IR_LED;
+	P1OUT |= IR_LED;
         
 	while (ADC10CTL1 & BUSY); // Wait if ADC10 core is active
 	ADC10CTL0 |= ADC10ENC | ADC10SC; // Sampling and conversion start

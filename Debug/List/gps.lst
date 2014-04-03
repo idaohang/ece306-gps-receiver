@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       03/Apr/2014  00:22:45 #
+# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       03/Apr/2014  00:33:09 #
 # Copyright 1996-2013 IAR Systems AB.                                         #
 #                                                                             #
 #    __rt_version  =  3                                                       #
@@ -274,15 +274,14 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\gps.c
    \   0000C8   042C         JC      ??GpsPacketChk_7
    \   0000CA   FF902C00.... CMP.B   #0x2c, GpsPacket(R15)
    \   0000D0   F423         JNE     ??GpsPacketChk_6
-     85              }
-     86                    
-     87          }
+     85              }          
+     86          }
    \                     ??GpsPacketChk_7:
    \   0000D2   3A41         POP.W   R10
    \   0000D4   1001         RETA
-     88                  
-     89          
-     90                  
+     87                  
+     88          
+     89                  
 
    Maximum stack usage in bytes:
 

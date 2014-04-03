@@ -82,8 +82,7 @@ void GpsPacketChk(void)
     while(GpsPacket[cf++] != ','); //Ends after 2nd comma
     for(int i = 0; i < sizeof Lon && GpsPacket[cf] != ','; i++, cf++) 
       Lon[i] = GpsPacket[cf];
-    }
-          
+    }          
 }
         
 

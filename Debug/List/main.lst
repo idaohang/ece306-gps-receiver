@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       01/Apr/2014  23:54:15 #
+# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       03/Apr/2014  00:02:39 #
 # Copyright 1996-2013 IAR Systems AB.                                         #
 #                                                                             #
 #    __rt_version  =  3                                                       #
@@ -119,44 +119,50 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\main.c
    \   000026   B240........ MOV.W   #`?<Constant "                ">`, &display_2
      54          	Display_Process();
    \   00002C   ........     CALLA   #Display_Process
-   \   000030   1A3C         JMP     ??main_2
+   \   000030   123C         JMP     ??main_1
      55          	
      56          /* ---------- Begining of the "While" Operating System ------------- */
      57          	while(ALWAYS) 										// Can the Operating system run
      58          	{                            
-     59          		for(int i = 0; i < DISPLAY_SIZE; i++)
-     60          		{
-     61          			display_1[i] = SerialRx[i];
+     59                          
+     60                          
+     61          		
+     62          		if(TimeMsec % EVERY_50 == RESET_TIME)
+     63                          {
+     64          			GpsPacketChk();
+     65                                  for(int i = 0; i < DISPLAY_SIZE; i++)
+     66                                  {
+     67                                      display_1[i] = Lat[i];
    \                     ??main_0:
    \   000032   1E42....     MOV.W   &display_1, R14
    \   000036   0E5F         ADD.W   R15, R14
-   \   000038   DE4F....0000 MOV.B   SerialRx(R15), 0(R14)
-     62          			display_2[i] = SerialRx[i+16];
+   \   000038   DE4F....0000 MOV.B   Lat(R15), 0(R14)
+     68                                      display_2[i] = Lon[i];
    \   00003E   1E42....     MOV.W   &display_2, R14
    \   000042   0E5F         ADD.W   R15, R14
-   \   000044   DE4F....0000 MOV.B   SerialRx + 16(R15), 0(R14)
-     63          		}
+   \   000044   DE4F....0000 MOV.B   Lon(R15), 0(R14)
+     69                                  }
    \   00004A   1F53         ADD.W   #0x1, R15
-   \                     ??main_1:
+   \                     ??main_2:
    \   00004C   3F901000     CMP.W   #0x10, R15
    \   000050   F03B         JL      ??main_0
-     64          		
-     65          		if(TimeMsec % EVERY_50 == RESET_TIME)		
-   \   000052   1C42....     MOV.W   &TimeMsec, R12
-   \   000056   3E403200     MOV.W   #0x32, R14
-   \   00005A   ........     CALLA   #?DivMod16u
-   \   00005E   0E93         CMP.W   #0x0, R14
-   \   000060   0220         JNE     ??main_2
-     66          			Display_Process();
-   \   000062   ........     CALLA   #Display_Process
-   \                     ??main_2:
-   \   000066   0F43         MOV.W   #0x0, R15
-   \   000068   F13F         JMP     ??main_1
-   \   00006A   0343         NOP
-     67                          
-     68          		
-     69          	}
-     70          }
+     70                                  Display_Process();
+   \   000052   ........     CALLA   #Display_Process
+   \                     ??main_1:
+   \   000056   1C42....     MOV.W   &TimeMsec, R12
+   \   00005A   3E403200     MOV.W   #0x32, R14
+   \   00005E   ........     CALLA   #?DivMod16u
+   \   000062   0E93         CMP.W   #0x0, R14
+   \   000064   F823         JNE     ??main_1
+   \   000066   ........     CALLA   #GpsPacketChk
+   \   00006A   0F43         MOV.W   #0x0, R15
+   \   00006C   EF3F         JMP     ??main_2
+   \   00006E   0343         NOP
+     71                          }
+     72                          
+     73          		
+     74          	}
+     75          }
 
    \                                 In  segment DATA16_C, align 1, align-sorted
    \                     `?<Constant "   Project  7   ">`:
@@ -169,7 +175,7 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\main.c
    \   000000   202020202020 DC8 "                "
    \            202020202020
    \            2020202000  
-     71          
+     76          
 
    Maximum stack usage in bytes:
 
@@ -177,6 +183,7 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\main.c
    ------ --------
       4   main
         4   -> Display_Process
+        4   -> GpsPacketChk
         4   -> Init_Clocks
         4   -> Init_Conditions
         4   -> Init_Interrupts
@@ -195,15 +202,15 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\main.c
        2  Time_Sequence
        3  control_state
        1  led_smclk
-     108  main
+     112  main
        1  one_time
 
  
- 108 bytes in segment CODE
+ 112 bytes in segment CODE
   34 bytes in segment DATA16_C
    7 bytes in segment DATA16_Z
  
- 108 bytes of CODE  memory
+ 112 bytes of CODE  memory
   34 bytes of CONST memory
    7 bytes of DATA  memory
 

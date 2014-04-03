@@ -2,6 +2,9 @@
 #include "macros.h"
 #include "functions.h"
 
+char GpsPacket[64], Lat[16], Lon[16];
+char isGPRMC = 0, isGPGGA = 0;
+
 
 void init_gps(void)
 {
@@ -10,33 +13,78 @@ void init_gps(void)
     waitMsec(GPS_WAIT);
     PJOUT |= GPS_RESET;
 
-    waitMsec(GPS_WAIT);
-    gps_wakeup();
-
-    PJOUT &= ~GPS_RESET;
-    waitMsec(GPS_WAIT);
-    //PJOUT |= GPS_PWRCNTL;
-
-
     while(!(PJIN & GPS_PWRCHK))
     {
         waitMsec(GPS_WAIT);
-        gps_wakeup();
+        PJOUT |= GPS_PWRCNTL;
+        waitMsec(GPS_WAIT);
+        PJOUT &= ~GPS_PWRCNTL;
     }
-      //Wait for it to transition to high
-    //Once PWRCHK is high, release GPS_PWRCNTL
-    //By setting to low.
-    //waitMsec(5000);
-    //PJOUT &= ~GPS_PWRCNTL;
+    
+    for(int i = 0; i < sizeof GpsPacket; i++)
+      GpsPacket[i] = 0x00;
+    for(int i = 0; i < sizeof Lat; i++)
+    {
+      Lat[i] = 0x00;
+      Lon[i] = 0x00;
+    }
 }
 
-void gps_wakeup(void){
-    waitMsec(GPS_WAIT);
-    PJOUT |= GPS_PWRCNTL;
-
-    while(!(PJIN & GPS_PWRCHK)){
-        //Wait until GPS_PWRCHK comes on.
-    }
-
-    PJOUT &= ~GPS_PWRCNTL;
+/*char ReadGpsPacket(void)
+{
+    gpsBuf_R %= sizeof GpsPacketBuffer;
+  
+    if(gpsBuf_R == gpsBuf_W)
+      return 0xFF;
+    
+    return GpsPacketBuffer[gpsBuf_R++];
 }
+
+void WriteGpsPacket(char c)
+{
+    gpsBuf_W %= sizeof GpsPacketBuffer;
+    GpsPacketBuffer[gpsBuf_W++] = c;
+}
+*/
+void GpsPacketChk(void)
+{
+    if(readSerial() != '$')
+    {
+      isGPRMC = 0, isGPGGA = 0;
+      return;
+    }
+    
+    for(int i = 0; i < sizeof GpsPacket; GpsPacket[i++] = 0x00);
+    
+    for(int i = 0; i < sizeof GpsPacket; i++)
+      GpsPacket[i] = readSerial();
+    
+    if(GpsPacket[3] == 'M' && GpsPacket[4] == 'C')
+      isGPRMC = 1;
+    
+    if(GpsPacket[3] == 'G' && GpsPacket[4] == 'A')
+      isGPGGA = 1;
+    
+    for(int i = 0; i < sizeof Lat; i++)
+    {
+      Lat[i] = 0x00;
+      Lon[i] = 0x00;
+    }
+    
+    
+    if(isGPRMC)
+    {
+    int cf = 0;
+    while(GpsPacket[cf++] != ','); //Ends after 1st comma
+    for(int i = 0; i < sizeof Lat && GpsPacket[cf] != ','; i++, cf++) //Ends at 2nd Comma
+      Lat[i] = GpsPacket[cf]; 
+    
+    while(GpsPacket[cf++] != ','); //Ends after 2nd comma
+    for(int i = 0; i < sizeof Lon && GpsPacket[cf] != ','; i++, cf++) 
+      Lon[i] = GpsPacket[cf];
+    }
+          
+}
+        
+
+        

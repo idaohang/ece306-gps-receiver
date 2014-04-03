@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       02/Apr/2014  00:43:21 #
+# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       03/Apr/2014  00:22:45 #
 # Copyright 1996-2013 IAR Systems AB.                                         #
 #                                                                             #
 #    __rt_version  =  3                                                       #
@@ -46,55 +46,250 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\gps.c
       3          #include "functions.h"
       4          
 
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+      5          char GpsPacket[64], Lat[16], Lon[16];
+   \                     GpsPacket:
+   \   000000                DS8 64
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+   \                     Lat:
+   \   000000                DS8 16
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+   \                     Lon:
+   \   000000                DS8 16
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+      6          char isGPRMC = 0, isGPGGA = 0;
+   \                     isGPRMC:
+   \   000000                DS8 1
+
+   \                                 In  segment DATA16_Z, align 1, align-sorted
+   \   000000                REQUIRE ?cstart_init_zero
+   \                     isGPGGA:
+   \   000000                DS8 1
+      7          
+      8          
+
    \                                 In  segment CODE, align 2
-      5          void init_gps(void)
+      9          void init_gps(void)
    \                     init_gps:
-      6          {
-      7              PJOUT |= GPS_RESET | GPS_PWR;
-   \   000000   B2D003002203 BIS.W   #0x3, &0x322
-      8              waitMsec(5000);  
-   \   000006   3C408813     MOV.W   #0x1388, R12
-   \   00000A   ........     CALLA   #waitMsec
-      9              PJOUT &= ~GPS_RESET;
-   \   00000E   A2C32203     BIC.W   #0x2, &0x322
-     10              waitMsec(1000);
+     10          {
+     11              PJOUT &= ~GPS_RESET;
+   \   000000   A2C32203     BIC.W   #0x2, &0x322
+     12          
+     13              waitMsec(GPS_WAIT);
+   \   000004   3C40E803     MOV.W   #0x3e8, R12
+   \   000008   ........     CALLA   #waitMsec
+     14              PJOUT |= GPS_RESET;
+   \   00000C   A2D32203     BIS.W   #0x2, &0x322
+   \   000010   0C3C         JMP     ??init_gps_3
+     15          
+     16              while(!(PJIN & GPS_PWRCHK))
+     17              {
+     18                  waitMsec(GPS_WAIT);
+   \                     ??init_gps_0:
    \   000012   3C40E803     MOV.W   #0x3e8, R12
    \   000016   ........     CALLA   #waitMsec
-   \   00001A   0C3C         JMP     ??init_gps_1
-     11              //PJOUT |= GPS_PWRCNTL;
-     12              
-     13          
-     14              while(!(PJIN & GPS_PWRCHK))
-     15              {
-     16                PJOUT |= GPS_PWRCNTL;
-   \                     ??init_gps_0:
-   \   00001C   A2D22203     BIS.W   #0x4, &0x322
-     17                waitMsec(500);
-   \   000020   3C40F401     MOV.W   #0x1f4, R12
-   \   000024   ........     CALLA   #waitMsec
-     18                PJOUT &= ~GPS_PWRCNTL;
-   \   000028   A2C22203     BIC.W   #0x4, &0x322
-     19                waitMsec(2000);
-   \   00002C   3C40D007     MOV.W   #0x7d0, R12
-   \   000030   ........     CALLA   #waitMsec
-     20              }
+     19                  PJOUT |= GPS_PWRCNTL;
+   \   00001A   A2D22203     BIS.W   #0x4, &0x322
+     20                  waitMsec(GPS_WAIT);
+   \   00001E   3C40E803     MOV.W   #0x3e8, R12
+   \   000022   ........     CALLA   #waitMsec
+     21                  PJOUT &= ~GPS_PWRCNTL;
+   \   000026   A2C22203     BIC.W   #0x4, &0x322
+     22              }
+   \                     ??init_gps_3:
+   \   00002A   B2B22003     BIT.W   #0x8, &0x320
+   \   00002E   F12B         JNC     ??init_gps_0
+     23              
+     24              for(int i = 0; i < sizeof GpsPacket; i++)
+   \   000030   0F43         MOV.W   #0x0, R15
+   \   000032   033C         JMP     ??init_gps_4
+     25                GpsPacket[i] = 0x00;
    \                     ??init_gps_1:
-   \   000034   B2B22003     BIT.W   #0x8, &0x320
-   \   000038   F12B         JNC     ??init_gps_0
-     21                //Wait for it to transition to high
-     22              //Once PWRCHK is high, release GPS_PWRCNTL
-     23              //By setting to low.
-     24              //waitMsec(5000);
-     25              //PJOUT &= ~GPS_PWRCNTL;
-     26          }
-   \   00003A   1001         RETA
-   \   00003C                REQUIRE _A_PJOUT_L
-   \   00003C                REQUIRE _A_PJIN_L
+   \   000034   CF43....     MOV.B   #0x0, GpsPacket(R15)
+   \   000038   1F53         ADD.W   #0x1, R15
+   \                     ??init_gps_4:
+   \   00003A   3F904000     CMP.W   #0x40, R15
+   \   00003E   FA2B         JNC     ??init_gps_1
+     26              for(int i = 0; i < sizeof Lat; i++)
+   \   000040   0F43         MOV.W   #0x0, R15
+   \   000042   053C         JMP     ??init_gps_5
+     27              {
+     28                Lat[i] = 0x00;
+   \                     ??init_gps_2:
+   \   000044   CF43....     MOV.B   #0x0, Lat(R15)
+     29                Lon[i] = 0x00;
+   \   000048   CF43....     MOV.B   #0x0, Lon(R15)
+     30              }
+   \   00004C   1F53         ADD.W   #0x1, R15
+   \                     ??init_gps_5:
+   \   00004E   3F901000     CMP.W   #0x10, R15
+   \   000052   F82B         JNC     ??init_gps_2
+     31          }
+   \   000054   1001         RETA
+   \   000056                REQUIRE _A_PJOUT_L
+   \   000056                REQUIRE _A_PJIN_L
+     32          
+     33          /*char ReadGpsPacket(void)
+     34          {
+     35              gpsBuf_R %= sizeof GpsPacketBuffer;
+     36            
+     37              if(gpsBuf_R == gpsBuf_W)
+     38                return 0xFF;
+     39              
+     40              return GpsPacketBuffer[gpsBuf_R++];
+     41          }
+     42          
+     43          void WriteGpsPacket(char c)
+     44          {
+     45              gpsBuf_W %= sizeof GpsPacketBuffer;
+     46              GpsPacketBuffer[gpsBuf_W++] = c;
+     47          }
+     48          */
+
+   \                                 In  segment CODE, align 2
+     49          void GpsPacketChk(void)
+   \                     GpsPacketChk:
+     50          {
+   \   000000   0A12         PUSH.W  R10
+     51              if(readSerial() != '$')
+   \   000002   ........     CALLA   #readSerial
+   \   000006   7C902400     CMP.B   #0x24, R12
+   \   00000A   0524         JEQ     ??GpsPacketChk_8
+     52              {
+     53                isGPRMC = 0, isGPGGA = 0;
+   \   00000C   C243....     MOV.B   #0x0, &isGPRMC
+   \   000010   C243....     MOV.B   #0x0, &isGPGGA
+     54                return;
+   \   000014   5E3C         JMP     ??GpsPacketChk_7
+     55              }
+     56              
+     57              for(int i = 0; i < sizeof GpsPacket; GpsPacket[i++] = 0x00);
+   \                     ??GpsPacketChk_8:
+   \   000016   0F43         MOV.W   #0x0, R15
+   \   000018   033C         JMP     ??GpsPacketChk_9
+   \                     ??GpsPacketChk_0:
+   \   00001A   CF43....     MOV.B   #0x0, GpsPacket(R15)
+   \   00001E   1F53         ADD.W   #0x1, R15
+   \                     ??GpsPacketChk_9:
+   \   000020   3F904000     CMP.W   #0x40, R15
+   \   000024   FA2B         JNC     ??GpsPacketChk_0
+     58              
+     59              for(int i = 0; i < sizeof GpsPacket; i++)
+   \   000026   0A43         MOV.W   #0x0, R10
+   \   000028   053C         JMP     ??GpsPacketChk_10
+     60                GpsPacket[i] = readSerial();
+   \                     ??GpsPacketChk_1:
+   \   00002A   ........     CALLA   #readSerial
+   \   00002E   CA4C....     MOV.B   R12, GpsPacket(R10)
+   \   000032   1A53         ADD.W   #0x1, R10
+   \                     ??GpsPacketChk_10:
+   \   000034   3A904000     CMP.W   #0x40, R10
+   \   000038   F82B         JNC     ??GpsPacketChk_1
+     61              
+     62              if(GpsPacket[3] == 'M' && GpsPacket[4] == 'C')
+   \   00003A   F2904D00.... CMP.B   #0x4d, &GpsPacket + 3
+   \   000040   0620         JNE     ??GpsPacketChk_11
+   \   000042   F2904300.... CMP.B   #0x43, &GpsPacket + 4
+   \   000048   0220         JNE     ??GpsPacketChk_11
+     63                isGPRMC = 1;
+   \   00004A   D243....     MOV.B   #0x1, &isGPRMC
+     64              
+     65              if(GpsPacket[3] == 'G' && GpsPacket[4] == 'A')
+   \                     ??GpsPacketChk_11:
+   \   00004E   F2904700.... CMP.B   #0x47, &GpsPacket + 3
+   \   000054   0620         JNE     ??GpsPacketChk_12
+   \   000056   F2904100.... CMP.B   #0x41, &GpsPacket + 4
+   \   00005C   0220         JNE     ??GpsPacketChk_12
+     66                isGPGGA = 1;
+   \   00005E   D243....     MOV.B   #0x1, &isGPGGA
+     67              
+     68              for(int i = 0; i < sizeof Lat; i++)
+   \                     ??GpsPacketChk_12:
+   \   000062   0F43         MOV.W   #0x0, R15
+   \   000064   053C         JMP     ??GpsPacketChk_13
+     69              {
+     70                Lat[i] = 0x00;
+   \                     ??GpsPacketChk_2:
+   \   000066   CF43....     MOV.B   #0x0, Lat(R15)
+     71                Lon[i] = 0x00;
+   \   00006A   CF43....     MOV.B   #0x0, Lon(R15)
+     72              }
+   \   00006E   1F53         ADD.W   #0x1, R15
+   \                     ??GpsPacketChk_13:
+   \   000070   3F901000     CMP.W   #0x10, R15
+   \   000074   F82B         JNC     ??GpsPacketChk_2
+     73              
+     74              
+     75              if(isGPRMC)
+   \   000076   C293....     CMP.B   #0x0, &isGPRMC
+   \   00007A   2B24         JEQ     ??GpsPacketChk_7
+     76              {
+     77              int cf = 0;
+   \   00007C   0F43         MOV.W   #0x0, R15
+     78              while(GpsPacket[cf++] != ','); //Ends after 1st comma
+   \                     ??GpsPacketChk_3:
+   \   00007E   0E4F         MOV.W   R15, R14
+   \   000080   0F4E         MOV.W   R14, R15
+   \   000082   1F53         ADD.W   #0x1, R15
+   \   000084   FE902C00.... CMP.B   #0x2c, GpsPacket(R14)
+   \   00008A   F923         JNE     ??GpsPacketChk_3
+     79              for(int i = 0; i < sizeof Lat && GpsPacket[cf] != ','; i++, cf++) //Ends at 2nd Comma
+   \   00008C   0E43         MOV.W   #0x0, R14
+   \   00008E   053C         JMP     ??GpsPacketChk_14
+     80                Lat[i] = GpsPacket[cf]; 
+   \                     ??GpsPacketChk_4:
+   \   000090   DE4F........ MOV.B   GpsPacket(R15), Lat(R14)
+   \   000096   1E53         ADD.W   #0x1, R14
+   \   000098   1F53         ADD.W   #0x1, R15
+   \                     ??GpsPacketChk_14:
+   \   00009A   3E901000     CMP.W   #0x10, R14
+   \   00009E   042C         JC      ??GpsPacketChk_5
+   \   0000A0   FF902C00.... CMP.B   #0x2c, GpsPacket(R15)
+   \   0000A6   F423         JNE     ??GpsPacketChk_4
+     81              
+     82              while(GpsPacket[cf++] != ','); //Ends after 2nd comma
+   \                     ??GpsPacketChk_5:
+   \   0000A8   0E4F         MOV.W   R15, R14
+   \   0000AA   0F4E         MOV.W   R14, R15
+   \   0000AC   1F53         ADD.W   #0x1, R15
+   \   0000AE   FE902C00.... CMP.B   #0x2c, GpsPacket(R14)
+   \   0000B4   F923         JNE     ??GpsPacketChk_5
+     83              for(int i = 0; i < sizeof Lon && GpsPacket[cf] != ','; i++, cf++) 
+   \   0000B6   0E43         MOV.W   #0x0, R14
+   \   0000B8   053C         JMP     ??GpsPacketChk_15
+     84                Lon[i] = GpsPacket[cf];
+   \                     ??GpsPacketChk_6:
+   \   0000BA   DE4F........ MOV.B   GpsPacket(R15), Lon(R14)
+   \   0000C0   1E53         ADD.W   #0x1, R14
+   \   0000C2   1F53         ADD.W   #0x1, R15
+   \                     ??GpsPacketChk_15:
+   \   0000C4   3E901000     CMP.W   #0x10, R14
+   \   0000C8   042C         JC      ??GpsPacketChk_7
+   \   0000CA   FF902C00.... CMP.B   #0x2c, GpsPacket(R15)
+   \   0000D0   F423         JNE     ??GpsPacketChk_6
+     85              }
+     86                    
+     87          }
+   \                     ??GpsPacketChk_7:
+   \   0000D2   3A41         POP.W   R10
+   \   0000D4   1001         RETA
+     88                  
+     89          
+     90                  
 
    Maximum stack usage in bytes:
 
    CSTACK Function
    ------ --------
+      6   GpsPacketChk
+        6   -> readSerial
       4   init_gps
         4   -> waitMsec
 
@@ -103,16 +298,23 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\gps.c
 
    Bytes  Function/Label
    -----  --------------
+      64  GpsPacket
+     214  GpsPacketChk
+      16  Lat
+      16  Lon
        2  _A_PJIN_L
        2  _A_PJOUT_L
-      60  init_gps
+      86  init_gps
+       1  isGPGGA
+       1  isGPRMC
 
  
- 60 bytes in segment CODE
-  4 bytes in segment DATA16_AN
+ 300 bytes in segment CODE
+   4 bytes in segment DATA16_AN
+  98 bytes in segment DATA16_Z
  
- 60 bytes of CODE memory
-  0 bytes of DATA memory (+ 4 bytes shared)
+ 300 bytes of CODE memory
+  98 bytes of DATA memory (+ 4 bytes shared)
 
 Errors: none
 Warnings: none

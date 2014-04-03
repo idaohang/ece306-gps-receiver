@@ -11,6 +11,8 @@ int serialRx_R = 0, serialRx_W = 0;
 char SerialTx[128];
 int serialTx_R = 0, serialTx_W = 0;
 
+
+
 #pragma vector=USCI_A0_VECTOR
 __interrupt void USCI_A0_ISR(void)
 {
@@ -38,6 +40,7 @@ __interrupt void USCI_A1_ISR(void)
 			break;
 		case 2: // Vector 2 - RXIFG			
 			SerialRx[serialRx_W++] = UCA1RXBUF;
+                        writeUsb(UCA1RXBUF); //Echo to COM
 			serialRx_W %= sizeof SerialRx;
 			break;
 		case 4: // Vector 4 – TXIFG
@@ -78,13 +81,17 @@ void Serial_Init(void)
 
 void writeUsb(char c)
 {
-	UsbTx[usbTx_W++] = c;
+        usbTx_W %= sizeof UsbTx;
+  
+        UsbTx[usbTx_W++] = c;
         UCA0TXBUF = c;
 }
 
 char readUsb(void)
 {
-	if(usbRx_R != usbRx_W)
+	usbRx_R %= sizeof UsbRx;
+  
+        if(usbRx_R != usbRx_W)
 		return UsbRx[usbRx_R++];
 	else
 		return 0xFF;
@@ -92,13 +99,17 @@ char readUsb(void)
 
 void writeSerial(char c)
 {
-	SerialTx[serialTx_W++] = c;
+	serialTx_W %= sizeof SerialTx;
+  
+        SerialTx[serialTx_W++] = c;
         UCA1TXBUF = c;
 }
 
 char readSerial(void)
 {
-	if(serialRx_R != serialRx_R)
+        serialRx_R %= sizeof SerialRx;
+  
+	if(serialRx_R != serialRx_W)
 		return SerialRx[serialRx_R++];
 	else
 		return 0xFF;

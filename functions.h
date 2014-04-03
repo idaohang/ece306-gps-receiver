@@ -6,6 +6,10 @@ void gps_wakeup(void);
 extern char *display_1;
 extern char *display_2;
 
+extern char GpsPacketBuffer[64];
+extern char Lat[16];
+extern char Lon[16];
+
 volatile extern unsigned int TimeMsec;
 volatile extern unsigned int Time_Sequence;
 volatile extern unsigned int CommTimer;
@@ -112,3 +116,5 @@ char readUsb(void);
 void writeUsb(char c);
 char readSerial(void);
 void writeSerial(char c);
+
+void GpsPacketChk(void);

@@ -56,21 +56,17 @@ void main(void)
 /* ---------- Begining of the "While" Operating System ------------- */
 	while(ALWAYS) 										// Can the Operating system run
 	{                            
-                
-                
-		
 		if(TimeMsec % EVERY_50 == RESET_TIME)
                 {
-			GpsPacketChk();
+                        GpsPacketChk();
+                  
                         for(int i = 0; i < DISPLAY_SIZE; i++)
                         {
                             display_1[i] = Lat[i];
                             display_2[i] = Lon[i];
                         }
                         Display_Process();
-                }
-                
-		
+                }	
 	}
 }
 

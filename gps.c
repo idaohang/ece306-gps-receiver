@@ -74,15 +74,58 @@ void GpsPacketChk(void)
     
     if(isGPRMC)
     {
-    int cf = 0;
-    while(GpsPacket[cf++] != ','); //Ends after 1st comma
-    for(int i = 0; i < sizeof Lat && GpsPacket[cf] != ','; i++, cf++) //Ends at 2nd Comma
-      Lat[i] = GpsPacket[cf]; 
+    int ci = 0;
+    while(GpsPacket[ci++] != ','); //Ends after 1st comma
+    while(GpsPacket[ci++] != ','); //Ends after 2nd comma
     
-    while(GpsPacket[cf++] != ','); //Ends after 2nd comma
-    for(int i = 0; i < sizeof Lon && GpsPacket[cf] != ','; i++, cf++) 
-      Lon[i] = GpsPacket[cf];
-    }          
+    if(GpsPacket[ci] != 'A')
+    {
+      Lat[0] = GpsPacket[ci];
+      
+      return;
+    }
+    
+    while(GpsPacket[ci++] != ','); //Ends after 3rd comma
+    
+    for(int i = 0; i < sizeof Lat && GpsPacket[ci] != ','; i++, ci++) //Ends at 2nd Comma
+      Lat[i] = GpsPacket[ci]; 
+    
+    while(GpsPacket[ci++] != ','); //Ends after 4th comma
+    Lat[15] = GpsPacket[ci];  //N or S
+        
+    while(GpsPacket[ci++] != ','); //Ends after 5nd comma
+    for(int i = 0; i < sizeof Lon && GpsPacket[ci] != ','; i++, ci++) 
+      Lon[i] = GpsPacket[ci];
+    
+    while(GpsPacket[ci++] != ','); //Ends after 6th comma
+    Lon[15] = GpsPacket[ci]; //E or W
+    }
+    
+    if(isGPGGA)
+    {
+    int ci = 0;
+    while(GpsPacket[ci++] != ',' && GpsPacket[ci++] != 0xFF); //Ends after 1st comma
+    
+    if(GpsPacket[ci] == ',' || GpsPacket[ci] == 0xFF)
+      return;
+    
+    while(GpsPacket[ci++] != ','); //Ends after 2nd comma
+    
+    while(GpsPacket[ci++] != ','); //Ends after 3rd comma
+    
+    for(int i = 0; i < sizeof Lat && GpsPacket[ci] != ','; i++, ci++) //Ends at 2nd Comma
+      Lat[i] = GpsPacket[ci]; 
+    
+    while(GpsPacket[ci++] != ','); //Ends after 4th comma
+    Lat[15] = GpsPacket[ci];  //N or S
+        
+    while(GpsPacket[ci++] != ','); //Ends after 5nd comma
+    for(int i = 0; i < sizeof Lon && GpsPacket[ci] != ','; i++, ci++) 
+      Lon[i] = GpsPacket[ci];
+    
+    while(GpsPacket[ci++] != ','); //Ends after 6th comma
+    Lon[15] = GpsPacket[ci]; //E or W
+    }  
 }
         
 

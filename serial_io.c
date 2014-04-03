@@ -11,6 +11,8 @@ int serialRx_R = 0, serialRx_W = 0;
 char SerialTx[128];
 int serialTx_R = 0, serialTx_W = 0;
 
+char GpsCounter = 0;
+
 
 
 #pragma vector=USCI_A0_VECTOR
@@ -39,9 +41,21 @@ __interrupt void USCI_A1_ISR(void)
 		case 0: // Vector 0 - no interrupt
 			break;
 		case 2: // Vector 2 - RXIFG			
-			SerialRx[serialRx_W++] = UCA1RXBUF;
-                        writeUsb(UCA1RXBUF); //Echo to COM
+			SerialRx[serialRx_W] = UCA1RXBUF;
+                        writeUsb(SerialRx[serialRx_W]); //Echo to COM
+                        
+                        if(SerialRx[serialRx_W] == '$')
+                        {
+                          if(GpsCounter == 0)
+                            GpsCounter = 64;
+                          else
+                            GpsPacketChk();
+                        }
+                        
+                        
+                        serialRx_W++;
 			serialRx_W %= sizeof SerialRx;
+                        
 			break;
 		case 4: // Vector 4 – TXIFG
 			break;

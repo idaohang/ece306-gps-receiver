@@ -58,7 +58,7 @@ void main(void)
 	{                            
 		if(TimeMsec % EVERY_50 == RESET_TIME)
                 {
-                        GpsPacketChk();
+                        //GpsPacketChk();
                   
                         for(int i = 0; i < DISPLAY_SIZE; i++)
                         {

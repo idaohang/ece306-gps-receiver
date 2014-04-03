@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-617424903
+Checksum=-466675431
 [Stack]
 FillEnabled=0
 OverflowWarningsEnabled=1
@@ -26,8 +26,7 @@ ShowArgs=0
 [Disassembly]
 MixedMode=1
 [Breakpoints]
-Bp0=_ "STD_CODE" "{$PROJ_DIR$\gps.c}.112.5" 1 0 0 0 "" 0 ""
-Count=1
+Count=0
 [FET]
 Clock mode=65518
 Extended Clock mode=65535

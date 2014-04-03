@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       03/Apr/2014  13:20:43 #
+# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       03/Apr/2014  14:41:14 #
 # Copyright 1996-2013 IAR Systems AB.                                         #
 #                                                                             #
 #    __rt_version  =  3                                                       #
@@ -126,7 +126,7 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\main.c
      58          	{                            
      59          		if(TimeMsec % EVERY_50 == RESET_TIME)
      60                          {
-     61                                  GpsPacketChk();
+     61                                  //GpsPacketChk();
      62                            
      63                                  for(int i = 0; i < DISPLAY_SIZE; i++)
      64                                  {
@@ -152,10 +152,9 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\main.c
    \   00005E   ........     CALLA   #?DivMod16u
    \   000062   0E93         CMP.W   #0x0, R14
    \   000064   F823         JNE     ??main_1
-   \   000066   ........     CALLA   #GpsPacketChk
-   \   00006A   0F43         MOV.W   #0x0, R15
-   \   00006C   EF3F         JMP     ??main_2
-   \   00006E   0343         NOP
+   \   000066   0F43         MOV.W   #0x0, R15
+   \   000068   F13F         JMP     ??main_2
+   \   00006A   0343         NOP
      69                          }	
      70          	}
      71          }
@@ -179,7 +178,6 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\main.c
    ------ --------
       4   main
         4   -> Display_Process
-        4   -> GpsPacketChk
         4   -> Init_Clocks
         4   -> Init_Conditions
         4   -> Init_Interrupts
@@ -198,15 +196,15 @@ C:\Users\Nathan\Documents\GitHub\ece306-gps-receiver\main.c
        2  Time_Sequence
        3  control_state
        1  led_smclk
-     112  main
+     108  main
        1  one_time
 
  
- 112 bytes in segment CODE
+ 108 bytes in segment CODE
   34 bytes in segment DATA16_C
    7 bytes in segment DATA16_Z
  
- 112 bytes of CODE  memory
+ 108 bytes of CODE  memory
   34 bytes of CONST memory
    7 bytes of DATA  memory
 

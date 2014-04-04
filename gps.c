@@ -60,9 +60,9 @@ void GpsPacketChk(void)
 		return;
     }
     
-    for(int i = 0; i < sizeof GpsPacket; GpsPacket[i++] = 0x00);
+    for(int i = 0; i < sizeof GpsPacket; GpsPacket[i++] = 0x00); //Empties GpsPacket
     
-    for(int i = 0; i < sizeof GpsPacket; i++)
+    for(int i = 0; i < sizeof GpsPacket; i++) //Fills GpsPacket
 		GpsPacket[i] = readSerial();
     
     if(GpsPacket[3] == 'M' && GpsPacket[4] == 'C')

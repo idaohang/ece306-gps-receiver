@@ -7,7 +7,7 @@ Warning[w6]: Type conflict for external/entry "MotorTimer", in module motor_cont
 #                                                                              #
 #      IAR Universal Linker V5.7.0.39                                          #
 #                                                                              #
-#           Link time     =  03/Apr/2014  18:35:06                             #
+#           Link time     =  03/Apr/2014  21:11:21                             #
 #           Target CPU    =  MSP430                                            #
 #           List file     =  C:\Users\Nathan\Documents\GitHub\ece306-gps-recei #
 #                            ver\Debug\List\Project_07.map                     #

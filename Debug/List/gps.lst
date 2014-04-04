@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       03/Apr/2014  18:35:05 #
+# IAR C/C++ Compiler V5.60.5.50814/W32 for MSP430       03/Apr/2014  21:11:21 #
 # Copyright 1996-2013 IAR Systems AB.                                         #
 #                                                                             #
 #    __rt_version  =  3                                                       #
@@ -171,7 +171,7 @@ Warning[Pe550]: variable "isGPGGA" was set but never used
    \   000018   C23C         JMP     ??GpsPacketChk_13
      61              }
      62              
-     63              for(int i = 0; i < sizeof GpsPacket; GpsPacket[i++] = 0x00);
+     63              for(int i = 0; i < sizeof GpsPacket; GpsPacket[i++] = 0x00); //Empties GpsPacket
    \                     ??GpsPacketChk_15:
    \   00001A   0F43         MOV.W   #0x0, R15
    \   00001C   033C         JMP     ??GpsPacketChk_16
@@ -182,7 +182,7 @@ Warning[Pe550]: variable "isGPGGA" was set but never used
    \   000024   3F904000     CMP.W   #0x40, R15
    \   000028   FA2B         JNC     ??GpsPacketChk_0
      64              
-     65              for(int i = 0; i < sizeof GpsPacket; i++)
+     65              for(int i = 0; i < sizeof GpsPacket; i++) //Fills GpsPacket
    \   00002A   0B43         MOV.W   #0x0, R11
    \   00002C   053C         JMP     ??GpsPacketChk_17
      66          		GpsPacket[i] = readSerial();
@@ -302,41 +302,36 @@ Warning[Pe550]: variable "isGPGGA" was set but never used
    \   000108   042C         JC      ??GpsPacketChk_8
    \   00010A   FF902C00.... CMP.B   #0x2c, GpsPacket(R15)
    \   000110   F423         JNE     ??GpsPacketChk_7
-    101          		/*for(int i = 0; i < sizeof Lat; i++) //minute sign
-    102          			if(Lat[i] == ' ')
-    103          			{
-    104          				Lat[i] = 0x27;
-    105          				break;
-    106          			}*/
-    107          		
-    108          		while(GpsPacket[ci++] != ','); //Ends after 4th comma
+    101          		
+    102          		
+    103          		while(GpsPacket[ci++] != ','); //Ends after 4th comma
    \                     ??GpsPacketChk_8:
    \   000112   0B4F         MOV.W   R15, R11
    \   000114   0F4B         MOV.W   R11, R15
    \   000116   1F53         ADD.W   #0x1, R15
    \   000118   FB902C00.... CMP.B   #0x2c, GpsPacket(R11)
    \   00011E   F923         JNE     ??GpsPacketChk_8
-    109          		Lat[15] = GpsPacket[ci];  //N or S
+    104          		Lat[15] = GpsPacket[ci];  //N or S
    \   000120   D24F........ MOV.B   GpsPacket(R15), &Lat + 15
-    110          			
-    111          		
-    112                          Lon[0] = 'L', Lon[1] = 'o', Lon[2] = 'n', Lon[3] = ':';
+    105          			
+    106          		
+    107                          Lon[0] = 'L', Lon[1] = 'o', Lon[2] = 'n', Lon[3] = ':';
    \   000126   F2404C00.... MOV.B   #0x4c, &Lon
    \   00012C   F2406F00.... MOV.B   #0x6f, &Lon + 1
    \   000132   F2406E00.... MOV.B   #0x6e, &Lon + 2
    \   000138   F2403A00.... MOV.B   #0x3a, &Lon + 3
-    113          		
-    114          		while(GpsPacket[ci++] != ','); //Ends after 5nd comma
+    108          		
+    109          		while(GpsPacket[ci++] != ','); //Ends after 5nd comma
    \                     ??GpsPacketChk_9:
    \   00013E   0B4F         MOV.W   R15, R11
    \   000140   0F4B         MOV.W   R11, R15
    \   000142   1F53         ADD.W   #0x1, R15
    \   000144   FB902C00.... CMP.B   #0x2c, GpsPacket(R11)
    \   00014A   F923         JNE     ??GpsPacketChk_9
-    115          		for(int i = 4; i < 7 && GpsPacket[ci] != ','; i++, ci++) 
+    110          		for(int i = 4; i < 7 && GpsPacket[ci] != ','; i++, ci++) 
    \   00014C   2B42         MOV.W   #0x4, R11
    \   00014E   053C         JMP     ??GpsPacketChk_25
-    116          			Lon[i] = GpsPacket[ci];
+    111          			Lon[i] = GpsPacket[ci];
    \                     ??GpsPacketChk_10:
    \   000150   DB4F........ MOV.B   GpsPacket(R15), Lon(R11)
    \   000156   1B53         ADD.W   #0x1, R11
@@ -346,14 +341,14 @@ Warning[Pe550]: variable "isGPGGA" was set but never used
    \   00015E   0434         JGE     ??GpsPacketChk_26
    \   000160   FF902C00.... CMP.B   #0x2c, GpsPacket(R15)
    \   000166   F423         JNE     ??GpsPacketChk_10
-    117          		Lon[7] = ' '; //degree sign
+    112          		Lon[7] = ' '; //degree sign
    \                     ??GpsPacketChk_26:
    \   000168   F2402000.... MOV.B   #0x20, &Lon + 7
-    118          		
-    119          		for(int i = 8; i < sizeof Lon && GpsPacket[ci] != ','; i++, ci++)
+    113          		
+    114          		for(int i = 8; i < sizeof Lon && GpsPacket[ci] != ','; i++, ci++)
    \   00016E   3B42         MOV.W   #0x8, R11
    \   000170   053C         JMP     ??GpsPacketChk_27
-    120          			Lon[i] = GpsPacket[ci];		
+    115          			Lon[i] = GpsPacket[ci];		
    \                     ??GpsPacketChk_11:
    \   000172   DB4F........ MOV.B   GpsPacket(R15), Lon(R11)
    \   000178   1B53         ADD.W   #0x1, R11
@@ -363,50 +358,45 @@ Warning[Pe550]: variable "isGPGGA" was set but never used
    \   000180   042C         JC      ??GpsPacketChk_12
    \   000182   FF902C00.... CMP.B   #0x2c, GpsPacket(R15)
    \   000188   F423         JNE     ??GpsPacketChk_11
-    121          		/*for(int i = 0; i < sizeof Lon; i++)
-    122          			if(Lon[i] == ' ')
-    123          			{
-    124          				Lon[i] = 0x27;
-    125          				break;
-    126          			}*/
-    127              
-    128          		while(GpsPacket[ci++] != ','); //Ends after 6th comma
+    116          		
+    117              
+    118          		while(GpsPacket[ci++] != ','); //Ends after 6th comma
    \                     ??GpsPacketChk_12:
    \   00018A   0B4F         MOV.W   R15, R11
    \   00018C   0F4B         MOV.W   R11, R15
    \   00018E   1F53         ADD.W   #0x1, R15
    \   000190   FB902C00.... CMP.B   #0x2c, GpsPacket(R11)
    \   000196   F923         JNE     ??GpsPacketChk_12
-    129          		Lon[15] = GpsPacket[ci]; //E or W
+    119          		Lon[15] = GpsPacket[ci]; //E or W
    \   000198   D24F........ MOV.B   GpsPacket(R15), &Lon + 15
-    130              }
+    120              }
+    121              
+    122              /*if(isGPGGA)
+    123              {
+    124              int ci = 0;
+    125              while(GpsPacket[ci++] != ',' && GpsPacket[ci++] != 0xFF); //Ends after 1st comma
+    126              
+    127              if(GpsPacket[ci] == ',' || GpsPacket[ci] == 0xFF)
+    128                return;
+    129              
+    130              while(GpsPacket[ci++] != ','); //Ends after 2nd comma
     131              
-    132              /*if(isGPGGA)
-    133              {
-    134              int ci = 0;
-    135              while(GpsPacket[ci++] != ',' && GpsPacket[ci++] != 0xFF); //Ends after 1st comma
+    132              while(GpsPacket[ci++] != ','); //Ends after 3rd comma
+    133              
+    134              for(int i = 0; i < sizeof Lat && GpsPacket[ci] != ','; i++, ci++) //Ends at 2nd Comma
+    135                Lat[i] = GpsPacket[ci]; 
     136              
-    137              if(GpsPacket[ci] == ',' || GpsPacket[ci] == 0xFF)
-    138                return;
-    139              
-    140              while(GpsPacket[ci++] != ','); //Ends after 2nd comma
-    141              
-    142              while(GpsPacket[ci++] != ','); //Ends after 3rd comma
+    137              while(GpsPacket[ci++] != ','); //Ends after 4th comma
+    138              Lat[15] = GpsPacket[ci];  //N or S
+    139                  
+    140              while(GpsPacket[ci++] != ','); //Ends after 5nd comma
+    141              for(int i = 0; i < sizeof Lon && GpsPacket[ci] != ','; i++, ci++) 
+    142                Lon[i] = GpsPacket[ci];
     143              
-    144              for(int i = 0; i < sizeof Lat && GpsPacket[ci] != ','; i++, ci++) //Ends at 2nd Comma
-    145                Lat[i] = GpsPacket[ci]; 
-    146              
-    147              while(GpsPacket[ci++] != ','); //Ends after 4th comma
-    148              Lat[15] = GpsPacket[ci];  //N or S
-    149                  
-    150              while(GpsPacket[ci++] != ','); //Ends after 5nd comma
-    151              for(int i = 0; i < sizeof Lon && GpsPacket[ci] != ','; i++, ci++) 
-    152                Lon[i] = GpsPacket[ci];
-    153              
-    154              while(GpsPacket[ci++] != ','); //Ends after 6th comma
-    155              Lon[15] = GpsPacket[ci]; //E or W
-    156              } */ 
-    157          }
+    144              while(GpsPacket[ci++] != ','); //Ends after 6th comma
+    145              Lon[15] = GpsPacket[ci]; //E or W
+    146              } */ 
+    147          }
    \                     ??GpsPacketChk_13:
    \   00019E   1A17         POPM.W  #0x2, R11
    \   0001A0   1001         RETA

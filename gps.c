@@ -2,8 +2,8 @@
 #include "macros.h"
 #include "functions.h"
 
-char GpsPacket[GPS_PACKET_SIZE], Lat[LAT_LENGTH], Lon[LON_LENGTH];
-char isGPRMC = BEGIN, isGPGGA = BEGIN;
+char GpsPacket[64], Lat[16], Lon[16];
+char isGPRMC = 0, isGPGGA = 0;
 
 
 void init_gps(void)
@@ -20,23 +20,23 @@ void init_gps(void)
         waitMsec(GPS_WAIT);
         PJOUT &= ~GPS_PWRCNTL;
     }
-
-    for(int i = BEGIN; i < sizeof GpsPacket; i++)
-      GpsPacket[i] = CLEAR_VAL;
-    for(int i = BEGIN; i < sizeof Lat; i++)
+    
+    for(int i = 0; i < sizeof GpsPacket; i++)
+      GpsPacket[i] = 0x00;
+    for(int i = 0; i < sizeof Lat; i++)
     {
-      Lat[i] = LAT_INIT;
-      Lon[i] = LON_INIT;
+      Lat[i] = 0x00;
+      Lon[i] = 0x00;
     }
 }
 
 /*char ReadGpsPacket(void)
 {
     gpsBuf_R %= sizeof GpsPacketBuffer;
-
+  
     if(gpsBuf_R == gpsBuf_W)
       return 0xFF;
-
+    
     return GpsPacketBuffer[gpsBuf_R++];
 }
 
@@ -46,53 +46,44 @@ void WriteGpsPacket(char c)
     GpsPacketBuffer[gpsBuf_W++] = c;
 }
 */
-
-//GPS macros
-//#define GPS_WAIT (1000)
-//#define BEGIN (0)
-//#define THIRD (3)
-//#define LAT_INIT (0x00)
-//#define LON_INIT (0x00)
-//#define FIRST (1)
-
 void GpsPacketChk(void)
 {
     if(readSerial() != '$')
     {
-      isGPRMC = BEGIN, isGPGGA = BEGIN;
+      isGPRMC = 0, isGPGGA = 0;
       return;
     }
-
-    for(int i = BEGIN; i < sizeof GpsPacket; GpsPacket[i++] = CLEAR_VAL);
-
-    for(int i = BEGIN; i < sizeof GpsPacket; i++)
+    
+    for(int i = 0; i < sizeof GpsPacket; GpsPacket[i++] = 0x00);
+    
+    for(int i = 0; i < sizeof GpsPacket; i++)
       GpsPacket[i] = readSerial();
-
-    if(GpsPacket[THIRD] == 'M' && GpsPacket[4] == 'C')
-      isGPRMC = FIRST;
-
-    if(GpsPacket[THIRD] == 'G' && GpsPacket[4] == 'A')
-      isGPGGA = FIRST;
-
-    for(int i = BEGIN; i < sizeof Lat; i++)
+    
+    if(GpsPacket[3] == 'M' && GpsPacket[4] == 'C')
+      isGPRMC = 1;
+    
+    if(GpsPacket[3] == 'G' && GpsPacket[4] == 'A')
+      isGPGGA = 1;
+    
+    for(int i = 0; i < sizeof Lat; i++)
     {
-      Lat[i] = LAT_INIT;
-      Lon[i] = LON_INIT;
+      Lat[i] = 0x00;
+      Lon[i] = 0x00;
     }
-
-
+    
+    
     if(isGPRMC)
     {
-    int cf = BEGIN;
+    int cf = 0;
     while(GpsPacket[cf++] != ','); //Ends after 1st comma
-    for(int i = BEGIN; i < sizeof Lat && GpsPacket[cf] != ','; i++, cf++) //Ends at 2nd Comma
-      Lat[i] = GpsPacket[cf];
-
+    for(int i = 0; i < sizeof Lat && GpsPacket[cf] != ','; i++, cf++) //Ends at 2nd Comma
+      Lat[i] = GpsPacket[cf]; 
+    
     while(GpsPacket[cf++] != ','); //Ends after 2nd comma
-    for(int i = BEGIN; i < sizeof Lon && GpsPacket[cf] != ','; i++, cf++)
+    for(int i = 0; i < sizeof Lon && GpsPacket[cf] != ','; i++, cf++) 
       Lon[i] = GpsPacket[cf];
-    }
+    }          
 }
+        
 
-
-
+        

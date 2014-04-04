@@ -218,17 +218,7 @@
 #define COUNT_1 (1)
 
 //GPS macros
-//GPS macros
 #define GPS_WAIT (1000)
-#define BEGIN (0)
-#define THIRD (3)
-#define LAT_INIT (0x00)
-#define LON_INIT (0x00)
-#define FIRST (1)
-#define CLEAR_VAL (0x00)
-#define GPS_PACKET_SIZE (64)
-#define LAT_LENGTH (16)
-#define LON_LENGTH (16)
 
 
 //-----------------------------------------------------------------------------
